@@ -192,3 +192,10 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# ZeroDay-specific ignores
+.env              # Local secrets
+vercel.json       # Optional if secrets are injected
+logs/             # If you log to a file like logs/zeroday.log
+*.log             # Catch stray logs
+*.yaml            # Optional: ignore generated config snapshots
