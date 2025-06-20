@@ -1,7 +1,7 @@
 ZeroDay/
 ├── agents/
 │   ├── guide_agent.py     2️⃣ 
-│   ├── knowledge_agent.py 1️⃣   
+│   ├── knowledge_agent.py ✅   
 │   ├── mentor_agent.py    3️⃣
 │   └── task_agent.py      4️⃣
 ├── api/
