@@ -24,9 +24,9 @@ ZeroDay/
 │   ├── slack_parser.py
 │   └── ticket_fetcher.py
 ├── vector_store/
-│   ├── chromadb_setup.py  1️⃣   
-│   ├── index_builder.py   1️⃣   
-│   └── retriever.py       1️⃣   3️⃣
+│   ├── chromadb_setup.py  ✅   
+│   ├── index_builder.py   ✅   
+│   └── retriever.py       ✅  3️⃣
 ├── frontend/
 │   └── pages/
 │       ├── chat.tsx
