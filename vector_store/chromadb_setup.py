@@ -197,19 +197,19 @@ class ChromaDBSetup:
             return False
     
     def delete_all_collections(self) -> bool:
-    """Delete all collections in the ChromaDB client"""
-    if not self.client:
-        self.initialize_client()
+        """Delete all collections in the ChromaDB client"""
+        if not self.client:
+            self.initialize_client()
 
-    try:
-        for collection in self.client.list_collections():
-            self.client.delete_collection(collection.name)
-            logger.info(f"Deleted collection: {collection.name}")
-        logger.info("All collections deleted successfully")
-        return True
-    except Exception as e:
-        logger.error(f"Error deleting all collections: {str(e)}")
-        return False
+        try:
+            for collection in self.client.list_collections():
+                self.client.delete_collection(collection.name)
+                logger.info(f"Deleted collection: {collection.name}")
+            logger.info("All collections deleted successfully")
+            return True
+        except Exception as e:
+            logger.error(f"Error deleting all collections: {str(e)}")
+            return False
 
     
     def backup_database(self, backup_path: str = None) -> str:
