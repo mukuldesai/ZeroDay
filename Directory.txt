@@ -7,7 +7,7 @@ ZeroDay/
 ├── api/
 │   ├── ask_mentor.py  ✅
 │   ├── chat.py ✅
-│   ├── generate_plan.py  1️⃣
+│   ├── generate_plan.py  ✅
 │   ├── query_code.py       ✅
 │   └── suggest_task.py   1️⃣
 ├── configs/
