@@ -5,11 +5,11 @@ ZeroDay/
 │   ├── mentor_agent.py    ✅
 │   └── task_agent.py      ✅
 ├── api/
-│   ├── ask_mentor.py
+│   ├── ask_mentor.py  ✅
 │   ├── chat.py ✅
-│   ├── generate_plan.py
+│   ├── generate_plan.py  1️⃣
 │   ├── query_code.py       ✅
-│   └── suggest_task.py
+│   └── suggest_task.py   1️⃣
 ├── configs/
 │   ├── prompts/
 │   │   ├── general_query.txt
@@ -20,9 +20,9 @@ ZeroDay/
 ├── data_sources/
 │   ├── code_parser.py   ✅
 │   ├── doc_ingestor.py  ✅
-│   ├── pr_fetcher.py
-│   ├── slack_parser.py
-│   └── ticket_fetcher.py
+│   ├── pr_fetcher.py    2️⃣
+│   ├── slack_parser.py   2️⃣
+│   └── ticket_fetcher.py  2️⃣
 ├── vector_store/
 │   ├── chromadb_setup.py  ✅   
 │   ├── index_builder.py   ✅   
@@ -36,8 +36,8 @@ ZeroDay/
 ├── logs
 ├── utils/
 │   ├── helpers.py   ✅ 
-│   ├── logger.py
-│   └── slackbot_stub.py
+│   ├── logger.py     3️⃣
+│   └── slackbot_stub.py  3️⃣
 ├── env/                         
 │   ├── Scripts/
 │   ├── Include/
@@ -45,6 +45,6 @@ ZeroDay/
 ├── .env                         
 ├── .gitignore                   
 ├── LICENSE                      
-├── README.md
+├── README.md   3️⃣
 ├── requirements.txt
 └── vercel.json
