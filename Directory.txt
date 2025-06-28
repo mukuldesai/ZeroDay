@@ -9,7 +9,7 @@ ZeroDay/
 │   ├── chat.py ✅
 │   ├── generate_plan.py  ✅
 │   ├── query_code.py       ✅
-│   └── suggest_task.py   1️⃣
+│   └── suggest_task.py   ✅
 ├── configs/
 │   ├── prompts/
 │   │   ├── general_query.txt
