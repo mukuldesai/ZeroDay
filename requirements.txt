@@ -1,0 +1,36 @@
+# Core APIs
+fastapi
+uvicorn[standard]
+
+# LLMs
+openai
+anthropic
+
+# LangChain & embeddings
+langchain
+chromadb
+tiktoken
+
+# YAML config
+pyyaml
+
+# Markdown & code parsing
+markdown
+beautifulsoup4
+python-multipart
+tree-sitter
+astunparse
+
+# Optional: GitHub/Slack/Jira parsers
+httpx
+slack-sdk
+
+# Utils
+pydantic
+loguru
+tenacity
+aiofiles
+
+# Dev & local testing
+python-dotenv
+watchdog
