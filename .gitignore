@@ -199,3 +199,4 @@ vercel.json       # Optional if secrets are injected
 logs/             # If you log to a file like logs/zeroday.log
 *.log             # Catch stray logs
 *.yaml            # Optional: ignore generated config snapshots
+*.exe
