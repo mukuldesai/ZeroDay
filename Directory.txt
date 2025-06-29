@@ -22,7 +22,7 @@ ZeroDay/
 │   ├── doc_ingestor.py  ✅
 │   ├── pr_fetcher.py    ✅
 │   ├── slack_parser.py   ✅
-│   └── ticket_fetcher.py  2️⃣
+│   └── ticket_fetcher.py  ✅
 ├── vector_store/
 │   ├── chromadb_setup.py  ✅   
 │   ├── index_builder.py   ✅   
