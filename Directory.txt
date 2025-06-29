@@ -20,7 +20,7 @@ ZeroDay/
 ├── data_sources/
 │   ├── code_parser.py   ✅
 │   ├── doc_ingestor.py  ✅
-│   ├── pr_fetcher.py    2️⃣
+│   ├── pr_fetcher.py    ✅
 │   ├── slack_parser.py   2️⃣
 │   └── ticket_fetcher.py  2️⃣
 ├── vector_store/
