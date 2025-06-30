@@ -36,8 +36,8 @@ ZeroDay/
 ├── logs
 ├── utils/
 │   ├── helpers.py   ✅ 
-│   ├── logger.py     3️⃣
-│   └── slackbot_stub.py  3️⃣
+│   ├── logger.py     ✅
+│   └── slackbot_stub.py  ✅
 ├── env/                         
 │   ├── Scripts/
 │   ├── Include/
