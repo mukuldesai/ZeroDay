@@ -12,7 +12,7 @@ ZeroDay/
 │   └── suggest_task.py   ✅
 ├── configs/
 │   ├── prompts/
-│   │   ├── general_query.txt
+│   │   ├── general_query.txt ✅
 │   │   ├── guide.txt  ✅ 
 │   │   ├── mentor.txt ✅ 
 │   │   └── task.txt   ✅
