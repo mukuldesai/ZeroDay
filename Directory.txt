@@ -1,50 +1,76 @@
 ZeroDay/
-├── agents/
-│   ├── guide_agent.py     ✅ 
-│   ├── knowledge_agent.py ✅   
-│   ├── mentor_agent.py    ✅
-│   └── task_agent.py      ✅
-├── api/
-│   ├── ask_mentor.py  ✅
-│   ├── chat.py ✅
-│   ├── generate_plan.py  ✅
-│   ├── query_code.py       ✅
-│   └── suggest_task.py   ✅
-├── configs/
+├── agents/                        
+│   ├── guide_agent.py           ✅
+│   ├── knowledge_agent.py       ✅
+│   ├── mentor_agent.py          ✅
+│   └── task_agent.py            ✅
+│
+├── api/                           
+│   ├── ask_mentor.py            ✅
+│   ├── chat.py                  ✅
+│   ├── generate_plan.py         ✅
+│   ├── query_code.py            ✅
+│   └── suggest_task.py          ✅
+│
+├── configs/                       
 │   ├── prompts/
-│   │   ├── general_query.txt ✅
-│   │   ├── guide.txt  ✅ 
-│   │   ├── mentor.txt ✅ 
-│   │   └── task.txt   ✅
-│   └── settings.yaml            
-├── data_sources/
-│   ├── code_parser.py   ✅
-│   ├── doc_ingestor.py  ✅
-│   ├── pr_fetcher.py    ✅
-│   ├── slack_parser.py   ✅
-│   └── ticket_fetcher.py  ✅
-├── vector_store/
-│   ├── chromadb_setup.py  ✅   
-│   ├── index_builder.py   ✅   
-│   └── retriever.py       ✅  ✅ 
-├── frontend/
-│   └── pages/
-│       ├── chat.tsx
-│       ├── dashboard.tsx
-│       ├── index.tsx
-│       └── tasks.tsx
-├── logs
-├── utils/
-│   ├── helpers.py   ✅ 
-│   ├── logger.py     ✅
-│   └── slackbot_stub.py  ✅
-├── env/                         
-│   ├── Scripts/
+│   │   ├── general_query.txt    ✅
+│   │   ├── guide.txt            ✅
+│   │   ├── mentor.txt           ✅
+│   │   └── task.txt             ✅
+│   └── settings.yaml            ✅
+│
+├── data_sources/                 
+│   ├── code_parser.py           ✅
+│   ├── doc_ingestor.py          ✅
+│   ├── pr_fetcher.py            ✅
+│   ├── slack_parser.py          ✅
+│   └── ticket_fetcher.py        ✅
+│
+├── vector_store/                  
+│   ├── chromadb_setup.py        ✅
+│   ├── index_builder.py         ✅
+│   └── retriever.py             ✅
+│
+├── frontend/                     
+│   ├── components/              ⬜ 
+│   ├── lib/                     ⬜ 
+│   ├── styles/
+│   │   └── global.css           ⬜ 
+│   ├── pages/                    
+│   │   ├── chat.tsx            ✅ 
+│   │   ├── index.tsx           ✅
+│   │   ├── dashboard.tsx       ✅ 
+│   │   └── tasks.tsx           ⬜ 
+│   ├── node_modules/           ✅ 
+│   ├── next.config.js          ✅ 
+│   ├── postcss.config.js       ✅
+│   ├── tailwind.config.js      ✅
+│   ├── tsconfig.json           ✅
+│   ├── package.json            ✅
+│   └── package-lock.json       ✅
+│
+├── logs/                          
+│   └── zeroday.log              ✅
+│
+├── utils/                        
+│   ├── helpers.py               ✅
+│   ├── logger.py                ✅
+│   └── slackbot_stub.py         ✅
+│
+├── env/                           
 │   ├── Include/
-│   └── etc...
-├── .env                         
-├── .gitignore                   
-├── LICENSE                      
-├── README.md   3️⃣
-├── requirements.txt
-└── vercel.json
+│   └── ...
+│
+├── .env                          ✅ 
+├── .env.local                    ✅ 
+├── .gitignore                   ✅
+├── LICENSE                      ✅
+├── README.md                    
+├── requirements.txt             ✅
+└── vercel.json                  ✅
+
+videos link(actual video)        ⬜ 
+testing jira,slack               ⬜ 
+final front end changes          ⬜ 
+
