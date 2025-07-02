@@ -1,36 +1,34 @@
-# Core APIs
+# FastAPI backend
 fastapi
 uvicorn[standard]
 
-# LLMs
+# LLM APIs
 openai
 anthropic
 
-# LangChain & embeddings
+# LangChain & vector search
 langchain
 chromadb
 tiktoken
 
-# YAML config
+# YAML & Markdown processing
 pyyaml
-
-# Markdown & code parsing
 markdown
 beautifulsoup4
 python-multipart
 tree-sitter
 astunparse
 
-# Optional: GitHub/Slack/Jira parsers
+# Third-party integrations
 httpx
 slack-sdk
 
-# Utils
+# Utilities
 pydantic
 loguru
 tenacity
 aiofiles
 
-# Dev & local testing
+# Dev/test
 python-dotenv
 watchdog
