@@ -200,3 +200,9 @@ logs/             # If you log to a file like logs/zeroday.log
 *.log             # Catch stray logs
 *.yaml            # Optional: ignore generated config snapshots
 *.exe
+
+# --- Frontend (Next.js) ---
+frontend/.next/                 # Build artifacts
+frontend/node_modules/         # Installed npm packages
+frontend/.env.local            # Frontend API keys/secrets
+frontend/package-lock.json     # Optional: include or ignore (see note)
