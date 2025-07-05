@@ -1,76 +1,141 @@
 ZeroDay/
-├── agents/                        
-│   ├── guide_agent.py           ✅
-│   ├── knowledge_agent.py       ✅
-│   ├── mentor_agent.py          ✅
-│   └── task_agent.py            ✅
+├── agents/                        ✅
+│   ├── guide_agent.py            ✅
+│   ├── knowledge_agent.py        ✅
+│   ├── mentor_agent.py           ✅
+│   └── task_agent.py             ✅
 │
-├── api/                           
-│   ├── ask_mentor.py            ✅
-│   ├── chat.py                  ✅
-│   ├── generate_plan.py         ✅
-│   ├── query_code.py            ✅
-│   └── suggest_task.py          ✅
+├── api/                           ✅
+│   ├── ask_mentor.py             ✅
+│   ├── chat.py                   ✅
+│   ├── generate_plan.py          ✅
+│   ├── query_code.py             ✅
+│   └── suggest_task.py           ✅
 │
-├── configs/                       
+├── configs/                       ✅
 │   ├── prompts/
-│   │   ├── general_query.txt    ✅
-│   │   ├── guide.txt            ✅
-│   │   ├── mentor.txt           ✅
-│   │   └── task.txt             ✅
-│   └── settings.yaml            ✅
+│   │   ├── general_query.txt     ✅
+│   │   ├── guide.txt             ✅
+│   │   ├── mentor.txt            ✅
+│   │   └── task.txt              ✅
+│   └── settings.yaml             ✅
 │
-├── data_sources/                 
-│   ├── code_parser.py           ✅
-│   ├── doc_ingestor.py          ✅
-│   ├── pr_fetcher.py            ✅
-│   ├── slack_parser.py          ✅
-│   └── ticket_fetcher.py        ✅
+├── data_sources/                 ✅
+│   ├── code_parser.py            ✅
+│   ├── doc_ingestor.py           ✅
+│   ├── pr_fetcher.py             ✅
+│   ├── slack_parser.py           ✅
+│   └── ticket_fetcher.py         ✅
 │
-├── vector_store/                  
-│   ├── chromadb_setup.py        ✅
-│   ├── index_builder.py         ✅
-│   └── retriever.py             ✅
+├── vector_store/                 ✅
+│   ├── chromadb_setup.py         ✅
+│   ├── index_builder.py          ✅
+│   └── retriever.py              ✅
 │
-├── frontend/                     
-│   ├── components/              ⬜ 
-│   ├── lib/                     ⬜ 
+├── frontend/                     ✅
+│   ├── components/               ✅
+│   │   ├── chat/
+│   │   ├── dashboard/
+│   │   ├── landing/
+│   │   ├── layout/
+│   │   │   └── NavigationHeader.tsx     ✅
+│   │   ├── tasks/
+│   │   └── ui/
+│   │       ├── ActivityItem.tsx        ✅
+│   │       ├── AgentBadge.tsx          ✅
+│   │       ├── AgentCardLanding.tsx    ✅
+│   │       ├── AgentSelector.tsx       ✅
+│   │       ├── ChatInput.tsx           ✅
+│   │       ├── ChatMessage.tsx         ✅
+│   │       ├── CreateTaskModal.tsx     ✅
+│   │       ├── CTASection.tsx          ✅
+│   │       ├── EmptyState.tsx          ✅
+│   │       ├── FeatureCard.tsx         ✅
+│   │       ├── FloatingElements.tsx    ✅
+│   │       ├── GoalsTracker.tsx        ✅
+│   │       ├── HeroSection.tsx         ✅
+│   │       ├── InteractiveDemo.tsx     ✅
+│   │       ├── KanbanBoard.tsx         ✅
+│   │       ├── LearningPathCard.tsx    ✅
+│   │       ├── LoadingSpinner.tsx      ✅
+│   │       ├── Modal.tsx               ✅
+│   │       ├── MotionButton.tsx        ✅
+│   │       ├── ProgressBar.tsx         ✅
+│   │       ├── ProgressCard.tsx        ✅
+│   │       ├── QuickActions.tsx        ✅
+│   │       ├── QuickActionsDashboard.tsx ✅
+│   │       ├── SearchInput.tsx         ✅
+│   │       ├── SectionHeader.tsx       ✅
+│   │       ├── StatCardHero.tsx        ✅
+│   │       ├── StatsCard.tsx           ✅
+│   │       ├── StatusBadge.tsx         ✅
+│   │       ├── TaskCard.tsx            ✅
+│   │       ├── TaskFilters.tsx         ✅
+│   │       ├── TaskListView.tsx        ✅
+│   │       ├── TypingIndicator.tsx     ✅
+│   │       ├── VideoModal.tsx          ✅
+│   │       ├── ViewModeToggle.tsx      ✅
+│   │       └── WelcomeBanner.tsx       ✅
+│
+│   ├── lib/                     ✅
+│   │   ├── animations/
+│   │   │   └── variants.ts            ✅
+│   │   ├── data/
+│   │   │   ├── chatData.tsx           ✅
+│   │   │   ├── dashboardData.tsx      ✅
+│   │   │   ├── landingData.tsx        ✅
+│   │   │   └── taskData.tsx           ✅
+│   │   ├── hooks/
+│   │   │   ├── useChat.ts             ✅
+│   │   │   ├── useCopyToClipboard.ts  ✅
+│   │   │   ├── useDebounce.ts         ✅
+│   │   │   ├── useFilter.ts           ✅
+│   │   │   ├── useLocalStorage.ts     ✅
+│   │   │   ├── useTasks.ts            ✅
+│   │   │   └── useTimer.ts            ✅
+│   │   ├── types/
+│   │   │   └── index.ts               ✅
+│   │   └── utils/
+│   │       ├── array.ts               ✅
+│   │       ├── clipboard.ts           ✅
+│   │       └── time.ts                ✅
+│
 │   ├── styles/
-│   │   └── global.css           ⬜ 
-│   ├── pages/                    
-│   │   ├── chat.tsx            ✅ 
-│   │   ├── index.tsx           ✅
-│   │   ├── dashboard.tsx       ✅ 
-│   │   └── tasks.tsx           ⬜ 
-│   ├── node_modules/           ✅ 
-│   ├── next.config.js          ✅ 
-│   ├── postcss.config.js       ✅
-│   ├── tailwind.config.js      ✅
-│   ├── tsconfig.json           ✅
-│   ├── package.json            ✅
-│   └── package-lock.json       ✅
+│   │   └── global.css                 ✅
 │
-├── logs/                          
-│   └── zeroday.log              ✅
+│   ├── pages/                         ✅
+│   │   ├── chat.tsx                   ✅
+│   │   ├── index.tsx                  ✅
+│   │   ├── dashboard.tsx              ✅
+│   │   └── tasks.tsx                  ✅
 │
-├── utils/                        
-│   ├── helpers.py               ✅
-│   ├── logger.py                ✅
-│   └── slackbot_stub.py         ✅
+│   ├── node_modules/                  ✅
+│   ├── next.config.js                ✅
+│   ├── postcss.config.js             ✅
+│   ├── tailwind.config.js            ✅
+│   ├── tsconfig.json                 ✅
+│   ├── package.json                  ✅
+│   └── package-lock.json             ✅
 │
-├── env/                           
-│   ├── Include/
-│   └── ...
+├── logs/                             ✅
+│   └── zeroday.log                   ✅
 │
-├── .env                          ✅ 
-├── .env.local                    ✅ 
-├── .gitignore                   ✅
-├── LICENSE                      ✅
-├── README.md                    
-├── requirements.txt             ✅
-└── vercel.json                  ✅
+├── utils/                            ✅
+│   ├── helpers.py                    ✅
+│   ├── logger.py                     ✅
+│   └── slackbot_stub.py              ✅
+│
+├── env/                              ✅
+│   └── ...                           
+│
+├── .env                              ✅
+├── .env.local                        ✅
+├── .gitignore                        ✅
+├── LICENSE                           ✅
+├── README.md                         
+├── requirements.txt                  ✅
+└── vercel.json                       ✅
 
 videos link(actual video)        ⬜ 
 testing jira,slack               ⬜ 
-final front end changes          ⬜ 
 
