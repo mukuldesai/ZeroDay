@@ -129,7 +129,7 @@ export default function DashboardPage() {
                       <div className="flex items-center space-x-2">
                         <select 
                           value={timeRange}
-                          onChange={(e) => setTimeRange(e.target.value)}
+                          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setTimeRange(e.target.value)}
                           className="text-sm bg-gray-100 border-0 rounded-lg px-3 py-1 focus:ring-2 focus:ring-indigo-500"
                         >
                           <option value="day">Today</option>
