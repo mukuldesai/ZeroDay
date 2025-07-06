@@ -111,16 +111,14 @@ export default function TasksPage() {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           filters={filters}
-          onFilterChange={(partial) => {
-            const [key, values] = Object.entries(partial)[0]
+          onFilterChange={(partial: Partial<Record<string, string[]>>) => {
+            const [key, values] = Object.entries(partial)[0] as [string, string[]]
             updateFilter(key as keyof typeof filters, values)
           }}
           sortBy={sortBy}
-          onSortChange={value => setSortBy(value as typeof sortBy)}
+          onSortChange={(value: string) => setSortBy(value as typeof sortBy)}
           activeFiltersCount={activeFiltersCount}
         />
-
-
 
         {/* Tasks Display */}
         <AnimatePresence mode="wait">
