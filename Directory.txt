@@ -104,7 +104,8 @@ ZeroDay/
 │   │   └── global.css                 ✅
 │
 │   ├── pages/                         ✅
-│   │   ├── chat.tsx                   ✅
+│   │   ├── _app.tsx                   ✅
+│   │   ├── chat.tsx                   ✅    
 │   │   ├── index.tsx                  ✅
 │   │   ├── dashboard.tsx              ✅
 │   │   └── tasks.tsx                  ✅
