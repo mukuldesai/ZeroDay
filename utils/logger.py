@@ -4,6 +4,8 @@ from pathlib import Path
 from loguru import logger
 from datetime import datetime
 from typing import Dict, Any, Optional
+from dotenv import load_dotenv
+load_dotenv()
 
 class ZeroDayLogger:
     """
@@ -203,7 +205,7 @@ class ZeroDayLogger:
             metric_name=metric_name,
             value=value,
             labels=labels or {},
-            timestamp=datetime.now().isoformat()
+            timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         )
         metric_logger.info(f"Metric: {metric_name} = {value}")
     

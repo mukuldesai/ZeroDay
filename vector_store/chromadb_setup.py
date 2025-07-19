@@ -7,6 +7,21 @@ from typing import Dict, List, Optional, Any
 from loguru import logger
 import shutil
 from datetime import datetime
+import chromadb
+from chromadb import PersistentClient
+import logging
+import chromadb
+chromadb.telemetry.capture = lambda *args, **kwargs: None
+from dotenv import load_dotenv
+load_dotenv()
+
+
+os.environ["ANONYMIZED_TELEMETRY"] = "False" 
+os.environ["CHROMA_TELEMETRY"] = "False"
+
+# Reduce ChromaDB logging verbosity
+logging.getLogger("chromadb").setLevel(logging.WARNING)
+logging.getLogger("chromadb.telemetry").setLevel(logging.ERROR)
 
 class ChromaDBSetup:
     """
@@ -14,8 +29,11 @@ class ChromaDBSetup:
     Handles database initialization, collection management, and configuration
     """
     
-    def __init__(self, config_path: str = None):
+    def __init__(self, config_path: str = None, user_id: str = None, org_id: str = None):
         self.config = self._load_config(config_path)
+        self.user_id = user_id or "demo_user"
+        self.org_id = org_id or "demo_org"
+        self.demo_mode = self.user_id == "demo_user"
         self.db_path = self._get_db_path()
         self.client = None
         self.collections = {}
@@ -27,16 +45,29 @@ class ChromaDBSetup:
                 os.path.dirname(__file__), "..", "configs", "settings.yaml"
             )
         
-        with open(config_path, 'r') as f:
+        with open(config_path, 'r', encoding='utf-8') as f:
             return yaml.safe_load(f)
     
     def _get_db_path(self) -> str:
-        """Get the database storage path"""
-        db_path = os.path.join(
-            os.path.dirname(__file__), "chroma_db"
-        )
+        """Get the database storage path with org isolation"""
+        if self.demo_mode:
+            db_path = os.path.join(
+                os.path.dirname(__file__), "chroma_db_demo"
+            )
+        else:
+            db_path = os.path.join(
+                os.path.dirname(__file__), "chroma_db", self.org_id
+            )
         os.makedirs(db_path, exist_ok=True)
         return db_path
+    
+    def _get_collection_name(self, base_name: str) -> str:
+        """Get collection name with tenant isolation"""
+        if self.demo_mode:
+            return f"demo_{base_name}"
+        return f"{self.org_id}_{base_name}"
+
+    
     
     def initialize_client(self) -> chromadb.PersistentClient:
         """Initialize ChromaDB client with persistent storage"""
@@ -47,10 +78,7 @@ class ChromaDBSetup:
                 anonymized_telemetry=False
             )
             
-            self.client = chromadb.PersistentClient(
-                path=self.db_path,
-                settings=settings
-            )
+            self.client = PersistentClient(path=self.db_path)
             
             logger.info(f"ChromaDB client initialized at: {self.db_path}")
             return self.client
@@ -66,8 +94,9 @@ class ChromaDBSetup:
         
         collections_info = {}
         
+        main_collection_name = self._get_collection_name(self.config['vector_store']['collection_name'])
         main_collection = self._create_or_get_collection(
-            name=self.config['vector_store']['collection_name'],
+            name=main_collection_name,
             description="Main knowledge base for code, docs, PRs, and team context"
         )
         collections_info['main'] = main_collection
@@ -81,7 +110,7 @@ class ChromaDBSetup:
         }
         
         for collection_name, description in specialized_collections.items():
-            full_name = f"{self.config['vector_store']['collection_name']}_{collection_name}"
+            full_name = self._get_collection_name(f"{self.config['vector_store']['collection_name']}_{collection_name}")
             collection = self._create_or_get_collection(
                 name=full_name,
                 description=description
@@ -89,7 +118,7 @@ class ChromaDBSetup:
             collections_info[collection_name] = collection
         
         self.collections = collections_info
-        logger.info(f"Set up {len(collections_info)} collections")
+        logger.info(f"Set up {len(collections_info)} collections for {'demo mode' if self.demo_mode else f'org {self.org_id}'}")
         
         return collections_info
     
@@ -108,6 +137,18 @@ class ChromaDBSetup:
                 
             except Exception:
                 metadata = {"description": description} if description else {}
+                if not self.demo_mode:
+                    metadata.update({
+                        "org_id": self.org_id,
+                        "created_by": self.user_id,
+                        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    })
+                else:
+                    metadata.update({
+                        "demo_mode": True,
+                        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    })
+                
                 collection = self.client.create_collection(
                     name=name,
                     embedding_function=embedding_function,
@@ -141,6 +182,21 @@ class ChromaDBSetup:
                 model_name="text-embedding-ada-002"
             )
     
+    def get_user_collections(self) -> List[str]:
+        """Get all collections for current user/org"""
+        if not self.client:
+            self.initialize_client()
+        
+        try:
+            all_collections = self.client.list_collections()
+            if self.demo_mode:
+                return [c.name for c in all_collections if c.name.startswith("demo_")]
+            else:
+                return [c.name for c in all_collections if c.name.startswith(f"{self.org_id}_")]
+        except Exception as e:
+            logger.error(f"Error getting user collections: {str(e)}")
+            return []
+    
     def get_collection_stats(self, collection_name: str = None) -> Dict[str, Any]:
         """Get statistics for a specific collection or all collections"""
         if not self.client:
@@ -150,7 +206,8 @@ class ChromaDBSetup:
         
         if collection_name:
             try:
-                collection = self.client.get_collection(collection_name)
+                full_name = self._get_collection_name(collection_name) if not collection_name.startswith(('demo_', self.org_id)) else collection_name
+                collection = self.client.get_collection(full_name)
                 stats[collection_name] = {
                     "count": collection.count(),
                     "metadata": collection.metadata or {}
@@ -159,9 +216,10 @@ class ChromaDBSetup:
                 stats[collection_name] = {"error": str(e)}
         else:
             try:
-                collections = self.client.list_collections()
-                for collection in collections:
-                    stats[collection.name] = {
+                user_collections = self.get_user_collections()
+                for collection_name in user_collections:
+                    collection = self.client.get_collection(collection_name)
+                    stats[collection_name] = {
                         "count": collection.count(),
                         "metadata": collection.metadata or {}
                     }
@@ -177,25 +235,43 @@ class ChromaDBSetup:
             self.initialize_client()
         
         try:
+            full_name = self._get_collection_name(collection_name)
+            
             try:
-                self.client.delete_collection(collection_name)
-                logger.info(f"Deleted collection: {collection_name}")
+                self.client.delete_collection(full_name)
+                logger.info(f"Deleted collection: {full_name}")
             except Exception:
-                logger.info(f"Collection {collection_name} didn't exist, creating new")
+                logger.info(f"Collection {full_name} didn't exist, creating new")
             
             embedding_function = self._get_embedding_function()
             collection = self.client.create_collection(
-                name=collection_name,
+                name=full_name,
                 embedding_function=embedding_function
             )
             
-            logger.info(f"Reset collection: {collection_name}")
+            logger.info(f"Reset collection: {full_name}")
             return True
             
         except Exception as e:
             logger.error(f"Error resetting collection {collection_name}: {str(e)}")
             return False
     
+    def delete_user_collections(self) -> bool:
+        """Delete all collections for current user/org"""
+        if not self.client:
+            self.initialize_client()
+
+        try:
+            user_collections = self.get_user_collections()
+            for collection_name in user_collections:
+                self.client.delete_collection(collection_name)
+                logger.info(f"Deleted collection: {collection_name}")
+            logger.info(f"All collections deleted for {'demo mode' if self.demo_mode else f'org {self.org_id}'}")
+            return True
+        except Exception as e:
+            logger.error(f"Error deleting user collections: {str(e)}")
+            return False
+
     def delete_all_collections(self) -> bool:
         """Delete all collections in the ChromaDB client"""
         if not self.client:
@@ -210,7 +286,6 @@ class ChromaDBSetup:
         except Exception as e:
             logger.error(f"Error deleting all collections: {str(e)}")
             return False
-
     
     def backup_database(self, backup_path: str = None) -> str:
         """Create a backup of the entire ChromaDB database"""
@@ -251,10 +326,13 @@ class ChromaDBSetup:
     def health_check(self) -> Dict[str, Any]:
         """Perform health check on ChromaDB setup"""
         health_info = {
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "database_path": self.db_path,
             "database_exists": os.path.exists(self.db_path),
             "client_initialized": self.client is not None,
+            "user_id": self.user_id,
+            "org_id": self.org_id,
+            "demo_mode": self.demo_mode,
             "collections": {},
             "total_documents": 0,
             "status": "unknown"
@@ -264,12 +342,13 @@ class ChromaDBSetup:
             if not self.client:
                 self.initialize_client()
             
-            collections = self.client.list_collections()
+            user_collections = self.get_user_collections()
             total_docs = 0
             
-            for collection in collections:
+            for collection_name in user_collections:
+                collection = self.client.get_collection(collection_name)
                 count = collection.count()
-                health_info["collections"][collection.name] = {
+                health_info["collections"][collection_name] = {
                     "document_count": count,
                     "metadata": collection.metadata or {}
                 }
@@ -295,16 +374,16 @@ class ChromaDBSetup:
             logger.error(f"Schema migration failed: {str(e)}")
             return False
 
-def setup_chromadb(config_path: str = None) -> ChromaDBSetup:
+def setup_chromadb(config_path: str = None, user_id: str = None, org_id: str = None) -> ChromaDBSetup:
     """Quick setup function to initialize ChromaDB"""
-    setup = ChromaDBSetup(config_path)
+    setup = ChromaDBSetup(config_path, user_id, org_id)
     setup.initialize_client()
     setup.setup_collections()
     return setup
 
-def get_chromadb_client(config_path: str = None) -> chromadb.PersistentClient:
+def get_chromadb_client(config_path: str = None, user_id: str = None, org_id: str = None) -> chromadb.PersistentClient:
     """Get a configured ChromaDB client"""
-    setup = ChromaDBSetup(config_path)
+    setup = ChromaDBSetup(config_path, user_id, org_id)
     return setup.initialize_client()
 
 if __name__ == "__main__":
@@ -312,7 +391,10 @@ if __name__ == "__main__":
     
     if len(sys.argv) > 1:
         command = sys.argv[1]
-        setup = ChromaDBSetup()
+        user_id = sys.argv[2] if len(sys.argv) > 2 else None
+        org_id = sys.argv[3] if len(sys.argv) > 3 else None
+        
+        setup = ChromaDBSetup(user_id=user_id, org_id=org_id)
         
         if command == "init":
             setup.initialize_client()
@@ -340,4 +422,4 @@ if __name__ == "__main__":
         else:
             print("Available commands: init, stats, health, backup")
     else:
-        print("Usage: python chromadb_setup.py [init|stats|health|backup]")
+        print("Usage: python chromadb_setup.py [init|stats|health|backup] [user_id] [org_id]")

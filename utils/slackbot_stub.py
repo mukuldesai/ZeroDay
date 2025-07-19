@@ -4,6 +4,8 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime
 from loguru import logger
 import asyncio
+from dotenv import load_dotenv
+load_dotenv()
 
 class SlackBotStub:
     """
@@ -17,7 +19,7 @@ class SlackBotStub:
         self.is_enabled = bool(self.bot_token) and self.config.get("enabled", False)
         self.mock_mode = not self.is_enabled
         
-       
+      
         self.mock_channels = {
             "general": {"id": "C1234567890", "name": "general"},
             "dev-team": {"id": "C1234567891", "name": "dev-team"}, 
@@ -25,10 +27,13 @@ class SlackBotStub:
             "onboarding": {"id": "C1234567893", "name": "onboarding"}
         }
         
+       
         self.mock_users = {
             "dev_123": {"id": "U1234567890", "name": "john.doe", "real_name": "John Doe"},
             "dev_456": {"id": "U1234567891", "name": "jane.smith", "real_name": "Jane Smith"},
-            "mentor_1": {"id": "U1234567892", "name": "alex.mentor", "real_name": "Alex Mentor"}
+            "mentor_1": {"id": "U1234567892", "name": "sarah.mentor", "real_name": "Sarah Chen"},  
+            "senior_dev": {"id": "U1234567893", "name": "mike.wilson", "real_name": "Mike Wilson"},
+            "team_lead": {"id": "U1234567894", "name": "priya.patel", "real_name": "Priya Patel"}
         }
         
         logger.info(f"SlackBot initialized - Mode: {'Mock' if self.mock_mode else 'Live'}")
@@ -48,9 +53,9 @@ class SlackBotStub:
                 "content": welcome_message
             }
         
-       
+        
         try:
-           
+            
             return {
                 "success": True,
                 "message_id": "real_message_id",
@@ -98,7 +103,7 @@ class SlackBotStub:
             }
         
         try:
-            
+           
             return {"success": True, "message_id": "real_task_message_id"}
         except Exception as e:
             logger.error(f"Failed to share task suggestion: {e}")
@@ -122,7 +127,7 @@ class SlackBotStub:
             }
         
         try:
-           
+            
             return {"success": True, "message_id": "real_help_message_id"}
         except Exception as e:
             logger.error(f"Failed to send help request: {e}")
@@ -165,7 +170,7 @@ class SlackBotStub:
             }
         
         try:
-           
+        
             return {"success": True, "reminder_id": "real_reminder_id"}
         except Exception as e:
             logger.error(f"Failed to schedule reminder: {e}")
@@ -182,7 +187,7 @@ class SlackBotStub:
                 mock_availability[user_id] = {
                     "status": "active",
                     "presence": "online" if hash(user_id) % 2 == 0 else "away",
-                    "last_seen": datetime.now().isoformat(),
+                    "last_seen": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     "timezone": "America/New_York"
                 }
             
@@ -193,7 +198,7 @@ class SlackBotStub:
             }
         
         try:
-            
+           
             return {"success": True, "availability": {}}
         except Exception as e:
             logger.error(f"Failed to get availability: {e}")
@@ -302,7 +307,7 @@ Keep up the great work! 🌟
         """.strip()
     
     async def get_mock_conversation_data(self) -> Dict[str, Any]:
-        """Get mock conversation data for testing"""
+        """Get mock conversation data for testing/demo purposes"""
         return {
             "channels": self.mock_channels,
             "users": self.mock_users,
@@ -311,15 +316,22 @@ Keep up the great work! 🌟
                     "channel": "dev-team",
                     "user": "dev_123",
                     "text": "Just completed my first React component! Thanks for the guidance.",
-                    "timestamp": datetime.now().isoformat(),
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     "reactions": ["👍", "🎉"]
                 },
                 {
                     "channel": "help",
                     "user": "dev_456", 
                     "text": "Having trouble with the authentication flow. Getting 401 errors.",
-                    "timestamp": datetime.now().isoformat(),
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     "thread_replies": 3
+                },
+                {
+                    "channel": "onboarding",
+                    "user": "mentor_1",
+                    "text": "Welcome to the team! Looking forward to working with you.",
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "reactions": ["🎉", "👋"]
                 }
             ]
         }
@@ -344,7 +356,7 @@ Keep up the great work! 🌟
         }
     
     async def simulate_user_interaction(self, user_id: str, interaction_type: str) -> Dict[str, Any]:
-        """Simulate user interaction for testing"""
+        """Simulate user interaction for testing/demo purposes"""
         
         interactions = {
             "ask_question": {
@@ -375,10 +387,11 @@ Keep up the great work! 🌟
                 "bot_response": interaction["response"],
                 "channel": interaction["channel"],
                 "mock": True,
-                "timestamp": datetime.now().isoformat()
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             }
         
         return {"success": False, "error": "Simulation only available in mock mode"}
+
 
 
 _slack_bot = None
@@ -410,14 +423,26 @@ async def request_team_help(user_id: str, problem: str, urgency: str = "normal")
     bot = get_slack_bot()
     return await bot.request_help(user_id, problem, urgency)
 
+
+async def get_demo_conversation_data() -> Dict[str, Any]:
+    """Get demo conversation data for portfolio showcase"""
+    bot = get_slack_bot()
+    return await bot.get_mock_conversation_data()
+
+def get_demo_users() -> Dict[str, Any]:
+    """Get demo users for portfolio showcase"""
+    bot = get_slack_bot()
+    return bot.mock_users
+
 if __name__ == "__main__":
     
     import asyncio
     
     async def test_slack_bot():
+        """Test suite for Slack bot functionality"""
         bot = SlackBotStub()
         
-        print("Testing Slack Bot Stub...")
+        print("🚀 Testing ZeroDay Slack Bot Integration...")
         print(f"Status: {bot.get_integration_status()}")
         
         
@@ -425,14 +450,20 @@ if __name__ == "__main__":
             "name": "John Doe",
             "role": "Frontend Developer"
         })
-        print(f"Welcome message: {result}")
+        print(f"✅ Welcome message: {result}")
+        
+        
+        result = await bot.request_help("dev_456", "Having authentication issues", "high")
+        print(f"✅ Help request: {result}")
         
        
-        result = await bot.request_help("dev_456", "Having authentication issues", "high")
-        print(f"Help request: {result}")
-        
-        
         result = await bot.simulate_user_interaction("dev_123", "share_success")
-        print(f"Simulated interaction: {result}")
+        print(f"✅ Simulated interaction: {result}")
+        
+       
+        demo_data = await bot.get_mock_conversation_data()
+        print(f"✅ Demo data available: {len(demo_data['sample_messages'])} messages")
+        
+        print("\n🎉 All tests passed! Slack bot stub is ready for portfolio demo.")
     
     asyncio.run(test_slack_bot())

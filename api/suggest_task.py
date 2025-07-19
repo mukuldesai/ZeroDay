@@ -1,169 +1,330 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, status
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 import os
 import sys
+import traceback
 from loguru import logger
+import logging
 from datetime import datetime
+from dotenv import load_dotenv
+load_dotenv()
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-from agents.task_agent import TaskAgent
+router = APIRouter(tags=["tasks"])
 
-router = APIRouter(prefix="/api", tags=["tasks"])
+class TaskRequest(BaseModel):
+    user_id: Optional[str] = "current_user"
+    role: Optional[str] = "developer" 
+    skill_level: Optional[str] = "beginner"
+    interests: Optional[List[str]] = []
+    learning_goals: Optional[List[str]] = []
+    time_available: Optional[str] = "2-4 hours"
+    user_context: Optional[Dict[str, Any]] = {}
 
-try:
-    task_agent = TaskAgent()
-    logger.info("Task Agent initialized successfully")
-except Exception as e:
-    logger.error(f"Failed to initialize Task Agent: {str(e)}")
-    task_agent = None
-
-class TaskSuggestionRequest(BaseModel):
-    user_role: str = Field(..., description="Target role (frontend, backend, fullstack, devops, mobile)")
-    skill_level: str = Field("beginner", description="Current skill level")
-    interests: Optional[List[str]] = Field(None, description="Areas of interest")
-    learning_goals: Optional[List[str]] = Field(None, description="Specific learning objectives")
-    time_available: str = Field("2-4 hours", description="Available time commitment")
-    context: Optional[Dict[str, Any]] = Field(None, description="Additional context")
-
-class TaskSuggestionResponse(BaseModel):
-    success: bool
-    task_suggestions: List[Dict[str, Any]]
-    learning_opportunities: List[Dict[str, Any]]
-    next_steps: List[str]
-    skill_development_path: List[str]
-    recommended_focus: str
-    estimated_completion_time: str
-    timestamp: str
-
-class QuickTaskRequest(BaseModel):
-    role: str = Field(..., description="User role")
-    available_time: str = Field("1-2 hours", description="Time available")
-    difficulty: str = Field("beginner", description="Preferred difficulty")
-
-class TaskProgressRequest(BaseModel):
-    task_id: str = Field(..., description="Task identifier")
-    status: str = Field(..., description="Task status (in_progress, completed, blocked)")
-    completion_percentage: Optional[int] = Field(None, ge=0, le=100)
-    feedback: Optional[str] = Field(None, description="User feedback")
-    time_spent: Optional[float] = Field(None, description="Time spent in hours")
-
-@router.post("/suggest_task", response_model=TaskSuggestionResponse)
-async def suggest_tasks(request: TaskSuggestionRequest):
+def clean_text_simple(text: str) -> str:
+    """Simple, fast text cleaning"""
+    if not text:
+        return ""
     try:
+        text = str(text)[:500]  
+        
+        text = text.replace('\x8f', '').replace('\x9f', '').replace('\x81', '').replace('\x9d', '')
+        
+        return ''.join(c for c in text if 32 <= ord(c) <= 126 or c in '\n\r\t')
+    except:
+        return "cleaned_content"
+
+def clean_list_simple(data: list) -> list:
+    """Simple, fast list cleaning"""
+    if not isinstance(data, list):
+        return []
+    return [clean_text_simple(str(item)) for item in data[:5]] 
+
+def clean_dict_simple(data: dict) -> dict:
+    """Simple, fast dict cleaning"""
+    if not isinstance(data, dict):
+        return {}
+    
+    cleaned = {}
+    for key, value in list(data.items())[:5]:  
+        try:
+            if isinstance(value, str):
+                cleaned[str(key)] = clean_text_simple(value)
+            elif isinstance(value, list):
+                cleaned[str(key)] = clean_list_simple(value)
+            elif isinstance(value, (int, float, bool)):
+                cleaned[str(key)] = value
+            else:
+                cleaned[str(key)] = str(value)[:100]
+        except:
+            cleaned[str(key)] = "error"
+    return cleaned
+
+@router.post("/api/suggest_task")
+async def suggest_tasks(request_data: dict):
+    """Optimized task suggestion endpoint"""
+    start_time = datetime.now()
+    
+    try:
+        
+        from api.main import get_agent
+        task_agent = get_agent("task")
+        
         if not task_agent:
-            raise HTTPException(status_code=503, detail="Task Agent not available")
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "success": False,
+                    "error": "Task agent temporarily unavailable",
+                    "task_suggestions": [],
+                    "learning_opportunities": [],
+                    "next_steps": ["Try again later", "Contact team lead for tasks"],
+                    "agent_type": "task",
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+            )
         
-        logger.info(f"Suggesting tasks for {request.skill_level} {request.user_role}")
+       
+        user_id = clean_text_simple(request_data.get("user_id", "current_user"))
+        role = clean_text_simple(request_data.get("role", "developer"))
+        skill_level = clean_text_simple(request_data.get("skill_level", "beginner"))
+        interests = clean_list_simple(request_data.get("interests", []))
+        learning_goals = clean_list_simple(request_data.get("learning_goals", []))
+        time_available = clean_text_simple(request_data.get("time_available", "2-4 hours"))
+        user_context = clean_dict_simple(request_data.get("user_context", {}))
         
-        result = await task_agent.suggest_tasks(
-            user_role=request.user_role,
-            skill_level=request.skill_level,
-            interests=request.interests,
-            learning_goals=request.learning_goals,
-            time_available=request.time_available,
-            context=request.context
-        )
         
-        if not result.get("success", False):
-            raise HTTPException(status_code=500, detail=f"Task suggestion failed: {result.get('error', 'Unknown error')}")
+        if not user_id.strip():
+            user_id = "current_user"
+        if not role.strip():
+            role = "developer"
+        if skill_level not in ["beginner", "intermediate", "advanced"]:
+            skill_level = "beginner"
         
-        return TaskSuggestionResponse(
-            success=True,
-            task_suggestions=result.get("task_suggestions", []),
-            learning_opportunities=result.get("learning_opportunities", []),
-            next_steps=result.get("next_steps", []),
-            skill_development_path=result.get("skill_development_path", []),
-            recommended_focus=_determine_recommended_focus(result.get("task_suggestions", [])),
-            estimated_completion_time=_calculate_total_time(result.get("task_suggestions", [])),
-            timestamp=result.get("metadata", {}).get("generated_at", datetime.now().isoformat())
-        )
+        logger.info(f"Task request for {user_id}: {skill_level} {role}")
         
-    except HTTPException:
-        raise
+        
+        try:
+            result = await task_agent.suggest_tasks(
+                user_id=user_id,
+                user_role=role,
+                skill_level=skill_level,
+                interests=interests,
+                learning_goals=learning_goals,
+                time_available=time_available,
+                user_context=user_context
+            )
+        except Exception as agent_error:
+            logger.error(f"Task agent call failed: {agent_error}")
+            return JSONResponse(
+                status_code=500,
+                content={
+                    "success": False,
+                    "error": "Task suggestion temporarily unavailable",
+                    "task_suggestions": [],
+                    "learning_opportunities": [],
+                    "next_steps": ["Try again later", "Contact team lead for tasks"],
+                    "agent_type": "task",
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+            )
+        
+       
+        if not isinstance(result, dict):
+            logger.error(f"Task agent returned invalid type: {type(result)}")
+            return JSONResponse(
+                status_code=500,
+                content={
+                    "success": False,
+                    "error": "Invalid response format from task agent",
+                    "task_suggestions": [],
+                    "learning_opportunities": [],
+                    "next_steps": ["Try a different request", "Contact support"],
+                    "agent_type": "task",
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+            )
+        
+     
+        response = {
+            "success": result.get("success", True),
+            "task_suggestions": result.get("task_suggestions", []),
+            "learning_opportunities": result.get("learning_opportunities", []),
+            "next_steps": result.get("next_steps", ["Continue with suggested tasks"]),
+            "skill_development_path": result.get("skill_development_path", []),
+            "agent_type": "task",
+            "user_id": user_id,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "processing_time": str(datetime.now() - start_time)
+        }
+        
+       
+        if "metadata" in result:
+            response["metadata"] = clean_dict_simple(result["metadata"])
+        if "enriched_context" in result:
+            response["enriched_context"] = clean_dict_simple(result["enriched_context"])
+        if "confidence" in result:
+            response["confidence"] = result["confidence"]
+        
+        return JSONResponse(content=response)
+        
     except Exception as e:
-        logger.error(f"Error in suggest_tasks: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+        logger.error(f"Task endpoint error: {e}")
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "error": "Task service temporarily unavailable",
+                "task_suggestions": [],
+                "learning_opportunities": [],
+                "next_steps": ["Try again later", "Contact team lead for tasks"],
+                "agent_type": "task",
+                "user_id": request_data.get("user_id", "unknown"),
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "processing_time": str(datetime.now() - start_time)
+            }
+        )
 
-@router.post("/quick_task")
-async def suggest_quick_task(request: QuickTaskRequest):
+@router.get("/api/task/health")
+async def task_health_check():
+    """Fast task agent health check"""
     try:
+        from api.main import get_agent
+        task_agent = get_agent("task")
+        
         if not task_agent:
-            raise HTTPException(status_code=503, detail="Task Agent not available")
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "status": "unhealthy", 
+                    "message": "Task Agent not initialized", 
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+            )
+        
+        try:
+            categories = task_agent.get_task_categories()
+            categories_loaded = len(categories.get("categories", {})) > 0
+        except Exception as e:
+            logger.warning(f"Error checking task categories: {e}")
+            categories_loaded = False
+            categories = {"supported_roles": []}
+        
+        return {
+            "status": "healthy",
+            "task_agent_available": True,
+            "categories_loaded": categories_loaded,
+            "supported_roles": categories.get("supported_roles", []),
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        
+    except Exception as e:
+        logger.error(f"Task health check failed: {str(e)}")
+        return JSONResponse(
+            status_code=503,
+            content={
+                "status": "unhealthy", 
+                "error": str(e), 
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+        )
+
+@router.post("/api/quick_task")
+async def suggest_quick_task(request_data: dict):
+    """Quick task suggestion for immediate use"""
+    try:
+        from api.main import get_agent
+        task_agent = get_agent("task")
+        
+        if not task_agent:
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "success": False,
+                    "message": "Task agent not available",
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+            )
+        
+        user_id = clean_text_simple(request_data.get("user_id", "current_user"))
+        role = clean_text_simple(request_data.get("role", "developer"))
+        available_time = clean_text_simple(request_data.get("available_time", "1-2 hours"))
+        difficulty = clean_text_simple(request_data.get("difficulty", "beginner"))
         
         result = await task_agent.suggest_tasks(
-            user_role=request.role,
-            skill_level=request.difficulty,
-            time_available=request.available_time
+            user_id=user_id,
+            user_role=role,
+            skill_level=difficulty,
+            time_available=available_time
         )
         
         if not result.get("success", False):
-            raise HTTPException(status_code=500, detail="Quick task suggestion failed")
+            return JSONResponse(
+                status_code=500,
+                content={
+                    "success": False, 
+                    "message": "Quick task suggestion failed",
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+            )
         
         suggestions = result.get("task_suggestions", [])
         quick_task = suggestions[0] if suggestions else None
         
         if not quick_task:
-            return {"success": False, "message": "No suitable tasks found"}
+            return {
+                "success": False, 
+                "message": "No suitable tasks found",
+                "suggestions": ["Try a different skill level", "Check with team lead"],
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
         
         return {
             "success": True,
+            "user_id": user_id,
             "task": {
                 "title": quick_task.get("title", quick_task.get("content", "")[:50] + "..."),
                 "description": quick_task.get("content", ""),
-                "estimated_time": quick_task.get("estimated_time", request.available_time),
-                "difficulty": quick_task.get("estimated_difficulty", request.difficulty),
+                "estimated_time": quick_task.get("estimated_time", available_time),
+                "difficulty": quick_task.get("estimated_difficulty", difficulty),
                 "skills_developed": quick_task.get("skills_developed", []),
                 "getting_started": quick_task.get("getting_started_steps", [])
             },
             "why_recommended": quick_task.get("recommendation_reason", "Good match for your skill level"),
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
         
     except Exception as e:
         logger.error(f"Error in suggest_quick_task: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@router.post("/update_task_progress")
-async def update_task_progress(request: TaskProgressRequest):
-    try:
-        if not task_agent:
-            raise HTTPException(status_code=503, detail="Task Agent not available")
-        
-        progress_update = {
-            "status": request.status,
-            "completion_percentage": request.completion_percentage,
-            "feedback": request.feedback,
-            "time_spent": request.time_spent
-        }
-        
-        result = await task_agent.update_task_progress(
-            task_id=request.task_id,
-            progress_update=progress_update
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "message": "Quick task service error",
+                "error": str(e),
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
         )
-        
-        if not result.get("success", False):
-            raise HTTPException(status_code=500, detail=result.get("error", "Progress update failed"))
-        
-        return {
-            "success": True,
-            "task_id": request.task_id,
-            "status_updated": request.status,
-            "next_suggestions": result.get("next_suggestions", []),
-            "achievement_unlocked": _check_achievements(request.status, request.completion_percentage),
-            "recommended_next_task": _suggest_next_task_type(request.status),
-            "timestamp": datetime.now().isoformat()
-        }
-        
-    except Exception as e:
-        logger.error(f"Error updating task progress: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/task_categories")
+@router.get("/api/task_categories")
 async def get_task_categories():
+    """Get available task categories"""
     try:
+        from api.main import get_agent
+        task_agent = get_agent("task")
+        
         if not task_agent:
-            raise HTTPException(status_code=503, detail="Task Agent not available")
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "success": False,
+                    "message": "Task Agent not available",
+                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+            )
         
         categories = task_agent.get_task_categories()
         
@@ -173,203 +334,19 @@ async def get_task_categories():
             "difficulty_levels": categories.get("difficulty_levels", []),
             "task_types": categories.get("task_types", []),
             "supported_roles": categories.get("supported_roles", []),
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
         
     except Exception as e:
         logger.error(f"Error getting task categories: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@router.get("/personalized_suggestions")
-async def get_personalized_suggestions(
-    role: str = Query(..., description="User role"),
-    skill_level: str = Query("beginner", description="Skill level"),
-    focus_area: Optional[str] = Query(None, description="Area to focus on"),
-    previous_tasks: Optional[str] = Query(None, description="Comma-separated completed task types")
-):
-    try:
-        if not task_agent:
-            raise HTTPException(status_code=503, detail="Task Agent not available")
-        
-       
-        completed_tasks = previous_tasks.split(",") if previous_tasks else []
-        
-       
-        context = {
-            "focus_area": focus_area,
-            "completed_task_types": completed_tasks,
-            "personalization_level": "high"
-        }
-        
-        result = await task_agent.suggest_tasks(
-            user_role=role,
-            skill_level=skill_level,
-            context=context
+        return JSONResponse(
+            status_code=500,
+            content={
+                "success": False,
+                "error": str(e),
+                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
         )
-        
-        if not result.get("success", False):
-            raise HTTPException(status_code=500, detail="Personalized suggestions failed")
-        
-        suggestions = result.get("task_suggestions", [])
-        
-        return {
-            "success": True,
-            "personalized_tasks": suggestions[:3],
-            "progression_path": _create_progression_path(suggestions, skill_level),
-            "skill_gaps": _identify_skill_gaps(completed_tasks, role),
-            "recommended_focus": focus_area or _suggest_focus_area(completed_tasks, role),
-            "next_milestone": _determine_next_milestone(skill_level, completed_tasks),
-            "timestamp": datetime.now().isoformat()
-        }
-        
-    except Exception as e:
-        logger.error(f"Error in personalized suggestions: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/task_recommendations/{user_id}")
-async def get_task_recommendations(
-    user_id: str,
-    limit: int = Query(5, ge=1, le=20, description="Number of recommendations")
-):
-    try:
-        
-        
-        recommendations = {
-            "user_id": user_id,
-            "recommendations": [
-                {
-                    "task_id": f"task_{i+1}",
-                    "title": f"Recommended Task {i+1}",
-                    "reason": "Based on your recent activity",
-                    "priority": "high" if i < 2 else "medium",
-                    "estimated_time": "2-3 hours",
-                    "skills_developed": ["problem_solving", "implementation"]
-                }
-                for i in range(min(limit, 5))
-            ],
-            "recommendation_basis": [
-                "Recent completed tasks",
-                "Identified skill gaps", 
-                "Learning goals alignment",
-                "Time availability patterns"
-            ],
-            "timestamp": datetime.now().isoformat()
-        }
-        
-        return recommendations
-        
-    except Exception as e:
-        logger.error(f"Error getting recommendations for {user_id}: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
-
-@router.get("/health")
-async def task_health_check():
-    try:
-        if not task_agent:
-            return {"status": "unhealthy", "message": "Task Agent not initialized", "timestamp": datetime.now().isoformat()}
-        
-        categories = task_agent.get_task_categories()
-        
-        return {
-            "status": "healthy",
-            "task_agent_available": True,
-            "categories_loaded": len(categories.get("categories", {})) > 0,
-            "supported_roles": categories.get("supported_roles", []),
-            "timestamp": datetime.now().isoformat()
-        }
-        
-    except Exception as e:
-        logger.error(f"Task health check failed: {str(e)}")
-        return {"status": "unhealthy", "error": str(e), "timestamp": datetime.now().isoformat()}
-
-
-def _determine_recommended_focus(suggestions: List[Dict]) -> str:
-    if not suggestions:
-        return "General skill development"
-    
-    skills = []
-    for task in suggestions:
-        skills.extend(task.get("skills_developed", []))
-    
-    skill_counts = {}
-    for skill in skills:
-        skill_counts[skill] = skill_counts.get(skill, 0) + 1
-    
-    if skill_counts:
-        top_skill = max(skill_counts, key=skill_counts.get)
-        return f"Focus on {top_skill} development"
-    
-    return "Balanced skill development"
-
-def _calculate_total_time(suggestions: List[Dict]) -> str:
-    if not suggestions:
-        return "No tasks available"
-    
-    total_hours = 0
-    for task in suggestions:
-        time_str = task.get("estimated_time", "2 hours")
-        
-        if "hour" in time_str:
-            hours = int(''.join(filter(str.isdigit, time_str.split()[0])) or 2)
-            total_hours += hours
-    
-    return f"Approximately {total_hours} hours total"
-
-def _check_achievements(status: str, completion_percentage: Optional[int]) -> Optional[str]:
-    if status == "completed":
-        return "🎉 Task Completed!"
-    elif completion_percentage and completion_percentage >= 75:
-        return "⭐ Almost There!"
-    elif completion_percentage and completion_percentage >= 50:
-        return "🚀 Halfway Done!"
-    return None
-
-def _suggest_next_task_type(status: str) -> str:
-    if status == "completed":
-        return "Consider a slightly more challenging task"
-    elif status == "blocked":
-        return "Try a different type of task or ask for help"
-    else:
-        return "Continue with current focus area"
-
-def _create_progression_path(suggestions: List[Dict], skill_level: str) -> List[str]:
-    if skill_level == "beginner":
-        return ["Start with simple tasks", "Build confidence", "Try intermediate challenges"]
-    elif skill_level == "intermediate":
-        return ["Tackle complex problems", "Lead small features", "Mentor beginners"]
-    else:
-        return ["Design systems", "Lead projects", "Teach advanced concepts"]
-
-def _identify_skill_gaps(completed_tasks: List[str], role: str) -> List[str]:
-    role_skills = {
-        "frontend": ["html", "css", "javascript", "react", "testing"],
-        "backend": ["apis", "databases", "authentication", "testing", "deployment"],
-        "fullstack": ["frontend", "backend", "integration", "deployment"],
-        "devops": ["ci/cd", "containerization", "monitoring", "security"],
-        "mobile": ["ui/ux", "platform_apis", "performance", "app_store"]
-    }
-    
-    expected_skills = role_skills.get(role, [])
-    completed_skill_areas = set(completed_tasks)
-    
-    gaps = [skill for skill in expected_skills if skill not in completed_skill_areas]
-    return gaps[:3]  
-
-def _suggest_focus_area(completed_tasks: List[str], role: str) -> str:
-    gaps = _identify_skill_gaps(completed_tasks, role)
-    return gaps[0] if gaps else "Advanced development practices"
-
-def _determine_next_milestone(skill_level: str, completed_tasks: List[str]) -> str:
-    task_count = len(completed_tasks)
-    
-    if skill_level == "beginner":
-        if task_count < 3:
-            return "Complete 3 basic tasks"
-        else:
-            return "Build first project"
-    elif skill_level == "intermediate":
-        return "Lead a feature implementation"
-    else:
-        return "Mentor junior developers"
 
 __all__ = ["router"]

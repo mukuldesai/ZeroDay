@@ -1,17 +1,17 @@
-# ZeroDay Configuration
 app:
   name: "ZeroDay"
   version: "0.1.0"
   debug: true
+  environment: "development"
 
-# LLM Configuration
 llm:
-  provider: "anthropic"  # or "openai"
-  model: "claude-3-sonnet-20240229"  # or "gpt-4-turbo-preview"
+  provider: "openai"
+  model: "gpt-4"
+  fallback_provider: "anthropic"  # ADD THIS LINE
+  fallback_model: "claude-3-haiku-20240307"  # ADD THIS LINE
   temperature: 0.7
   max_tokens: 4096
-  
-# API Keys (use environment variables in production)
+
 api_keys:
   openai: "${OPENAI_API_KEY}"
   anthropic: "${ANTHROPIC_API_KEY}"
@@ -19,66 +19,87 @@ api_keys:
   slack: "${SLACK_BOT_TOKEN}"
   jira: "${JIRA_API_TOKEN}"
 
-# Vector Database
 vector_store:
   provider: "chromadb"
   collection_name: "zeroday_knowledge"
-  embedding_model: "text-embedding-ada-002"  # OpenAI embeddings
+  embedding_model: "text-embedding-ada-002"
   chunk_size: 1000
   chunk_overlap: 200
   distance_threshold: 0.8
+  persist_directory: "./vector_store/chroma_db"
 
-# Data Source Paths
 data_sources:
   codebase:
     path: "./sample_codebase"
     extensions: [".py", ".js", ".ts", ".jsx", ".tsx", ".java", ".go", ".rs"]
     ignore_patterns: ["node_modules", "__pycache__", ".git", "dist", "build"]
-  
+    
   documentation:
     path: "./docs"
     extensions: [".md", ".rst", ".txt"]
-  
+    
   slack_export:
     path: "./slack_export"
     enabled: false
-  
+    
   github:
     repo_url: "https://github.com/your-org/your-repo"
     pr_limit: 50
     enabled: false
 
-# Agent Configuration
 agents:
   knowledge:
     enabled: true
     max_results: 10
-    
+      
   guide:
     enabled: true
     learning_paths:
       - "frontend"
-      - "backend" 
+      - "backend"
       - "fullstack"
       - "devops"
       - "mobile"
-    
+      
   mentor:
     enabled: true
     context_window: 5
-    
+      
   task:
     enabled: true
     difficulty_levels: ["beginner", "intermediate", "advanced"]
     task_types: ["bug_fix", "feature", "refactor", "test", "docs"]
 
-# Logging
+auth:
+  session_timeout: 86400
+  jwt_secret: "${JWT_SECRET}"
+  jwt_expiration: 86400
+  password_min_length: 8
+  demo_mode_enabled: true
+
+demo:
+  enabled: true
+  default_scenarios: ["startup", "enterprise", "freelancer"]
+  data_refresh_interval: 3600
+  synthetic_user_count: 10
+
+database:
+  url: "${DATABASE_URL}"
+  echo: false
+  pool_size: 10
+  max_overflow: 20
+
+security:
+  rate_limit_requests: 100
+  rate_limit_window: 3600
+  cors_origins: ["http://localhost:3000", "https://your-domain.com"]
+  allowed_hosts: ["localhost", "127.0.0.1", "your-domain.com"]
+
 logging:
   level: "INFO"
   format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
   file: "logs/zeroday.log"
 
-# Server Configuration
 server:
   host: "0.0.0.0"
   port: 8000
