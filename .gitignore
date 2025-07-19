@@ -112,3 +112,4 @@ frontend/.env.local
 
 # Optional: lockfile (ignore if your team doesn't commit it)
 # frontend/package-lock.json
+!/.render.yaml
