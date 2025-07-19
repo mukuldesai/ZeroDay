@@ -7,10 +7,16 @@ import { ProgressBar } from './ProgressBar'
 interface ProgressCardProps {
   data: ProgressData
   delay?: number
+  userId?: string
 }
 
-export const ProgressCard: React.FC<ProgressCardProps> = ({ data, delay = 0 }) => {
+export const ProgressCard: React.FC<ProgressCardProps> = ({ 
+  data, 
+  delay = 0,
+  userId 
+}) => {
   const percentage = (data.completed / data.total) * 100
+  const userOwnsData = !userId || data.userId === userId
 
   return (
     <motion.div
@@ -18,7 +24,9 @@ export const ProgressCard: React.FC<ProgressCardProps> = ({ data, delay = 0 }) =
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.6 }}
       whileHover={{ scale: 1.02, y: -2 }}
-      className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
+      className={`bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 ${
+        !userOwnsData ? 'opacity-75' : ''
+      }`}
     >
       <div className="flex items-center justify-between mb-4">
         <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${data.color} flex items-center justify-center text-white`}>
@@ -39,15 +47,17 @@ export const ProgressCard: React.FC<ProgressCardProps> = ({ data, delay = 0 }) =
       
       <div className="flex items-center justify-between text-sm">
         <span className="text-gray-600">{Math.round(percentage)}% complete</span>
-        <motion.span 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="text-green-600 flex items-center"
-        >
-          <ArrowUp className="w-3 h-3 mr-1" />
-          +12%
-        </motion.span>
+        {userOwnsData && (
+          <motion.span 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-green-600 flex items-center"
+          >
+            <ArrowUp className="w-3 h-3 mr-1" />
+            +{data.growthPercentage || 12}%
+          </motion.span>
+        )}
       </div>
     </motion.div>
   )
