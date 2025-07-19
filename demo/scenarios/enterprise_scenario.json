@@ -1,0 +1,70 @@
+{
+  "scenario_name": "Enterprise Solutions Corp",
+  "company_type": "large_enterprise",
+  "team_size": 250,
+  "tech_stack": ["Java", "Spring Boot", "Angular", "Oracle", "Azure"],
+  "industry": "healthcare",
+  "user_profile": {
+    "name": "Marcus Rodriguez",
+    "role": "Senior Software Engineer",
+    "experience": "7 years", 
+    "joining_date": "2020-03-01",
+    "team": "Patient Management Systems"
+  },
+  "projects": [
+    {
+      "name": "HIPAA Compliance Upgrade",
+      "status": "in_progress",
+      "priority": "critical",
+      "deadline": "2025-07-30",
+      "technologies": ["Java", "Spring Security", "Azure Key Vault"]
+    },
+    {
+      "name": "Microservices Migration",
+      "status": "planning",
+      "priority": "high", 
+      "deadline": "2025-12-01",
+      "technologies": ["Docker", "Kubernetes", "Azure Service Fabric"]
+    },
+    {
+      "name": "Legacy System Integration",
+      "status": "completed",
+      "priority": "medium",
+      "completion_date": "2025-06-15",
+      "technologies": ["REST APIs", "SOAP", "Message Queues"]
+    }
+  ],
+  "recent_activities": [
+    "Completed security audit documentation",
+    "Led architecture review meeting",
+    "Mentored junior developers",
+    "Updated disaster recovery procedures"
+  ],
+  "learning_goals": [
+    "Azure cloud architecture certification",
+    "Advanced Kubernetes management",
+    "Healthcare data standards (HL7, FHIR)"
+  ],
+  "team_structure": {
+    "backend_engineers": 45,
+    "frontend_engineers": 35,
+    "devops_engineers": 15,
+    "qa_engineers": 25,
+    "architects": 8,
+    "product_managers": 12,
+    "scrum_masters": 6
+  },
+  "tools": [
+    "Azure DevOps",
+    "Microsoft Teams",
+    "ServiceNow",
+    "Confluence",
+    "SonarQube",
+    "Splunk"
+  ],
+  "compliance": [
+    "HIPAA",
+    "SOC 2",
+    "ISO 27001"
+  ]
+}

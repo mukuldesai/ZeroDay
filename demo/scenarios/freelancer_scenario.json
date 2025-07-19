@@ -1,0 +1,80 @@
+{
+  "scenario_name": "Independent Developer",
+  "company_type": "freelancer",
+  "team_size": 1,
+  "tech_stack": ["Next.js", "Python", "FastAPI", "Vercel", "Supabase"],
+  "industry": "web_development",
+  "user_profile": {
+    "name": "Alex Thompson",
+    "role": "Full Stack Developer",
+    "experience": "5 years",
+    "specialization": "AI-powered web applications",
+    "location": "Remote"
+  },
+  "projects": [
+    {
+      "name": "E-commerce Platform",
+      "client": "Local Retail Chain",
+      "status": "in_progress",
+      "priority": "high",
+      "deadline": "2025-08-01",
+      "technologies": ["Next.js", "Stripe", "Supabase"],
+      "budget": "$15000"
+    },
+    {
+      "name": "AI Content Generator",
+      "client": "Marketing Agency",
+      "status": "proposal",
+      "priority": "medium",
+      "deadline": "2025-09-15",
+      "technologies": ["Python", "OpenAI API", "FastAPI"],
+      "budget": "$8000"
+    },
+    {
+      "name": "Portfolio Website",
+      "client": "Personal",
+      "status": "completed",
+      "priority": "low",
+      "completion_date": "2025-06-01",
+      "technologies": ["React", "Tailwind CSS", "Netlify"]
+    }
+  ],
+  "recent_activities": [
+    "Deployed e-commerce MVP to staging",
+    "Client presentation for AI project",
+    "Updated personal portfolio",
+    "Researched new AI tools and frameworks"
+  ],
+  "learning_goals": [
+    "Advanced AI/ML integration",
+    "Mobile app development with React Native",
+    "Better client communication skills",
+    "Business development strategies"
+  ],
+  "business_metrics": {
+    "monthly_revenue": "$8500",
+    "active_clients": 3,
+    "project_completion_rate": "95%",
+    "client_satisfaction": "4.8/5"
+  },
+  "tools": [
+    "VS Code",
+    "GitHub",
+    "Figma",
+    "Notion",
+    "Zoom",
+    "QuickBooks"
+  ],
+  "challenges": [
+    "Finding consistent high-quality clients",
+    "Managing multiple project timelines",
+    "Staying updated with technology trends",
+    "Work-life balance"
+  ],
+  "networking": [
+    "Local developer meetups",
+    "Online freelancer communities",
+    "Client referral network",
+    "Social media presence"
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "scenario_name": "TechStartup Inc",
+  "company_type": "early_stage_startup",
+  "team_size": 12,
+  "tech_stack": ["React", "Node.js", "Python", "PostgreSQL", "AWS"],
+  "industry": "fintech",
+  "user_profile": {
+    "name": "Sarah Chen",
+    "role": "Senior Full Stack Developer",
+    "experience": "3 years",
+    "joining_date": "2024-01-15"
+  },
+  "projects": [
+    {
+      "name": "Payment Gateway Integration",
+      "status": "in_progress",
+      "priority": "high",
+      "deadline": "2025-08-15",
+      "technologies": ["Stripe API", "React", "Node.js"]
+    },
+    {
+      "name": "User Dashboard Redesign",
+      "status": "planning",
+      "priority": "medium",
+      "deadline": "2025-09-01",
+      "technologies": ["React", "TypeScript", "Tailwind CSS"]
+    }
+  ],
+  "recent_activities": [
+    "Fixed critical bug in payment processing",
+    "Completed code review for authentication module",
+    "Updated API documentation",
+    "Participated in sprint planning"
+  ],
+  "learning_goals": [
+    "Master microservices architecture",
+    "Learn Kubernetes deployment",
+    "Improve React performance optimization"
+  ],
+  "team_structure": {
+    "frontend": 4,
+    "backend": 3,
+    "devops": 2,
+    "product": 2,
+    "design": 1
+  },
+  "tools": [
+    "GitHub",
+    "Slack",
+    "Jira",
+    "Figma",
+    "AWS Console"
+  ]
+}
