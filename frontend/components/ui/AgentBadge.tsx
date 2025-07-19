@@ -42,13 +42,15 @@ interface AgentBadgeProps {
   size?: 'sm' | 'md' | 'lg'
   showIcon?: boolean
   className?: string
+  userId?: string
 }
 
 export const AgentBadge: React.FC<AgentBadgeProps> = ({
   agent,
   size = 'md',
   showIcon = true,
-  className = ''
+  className = '',
+  userId
 }) => {
   const config = agentConfigs[agent]
   
