@@ -1,48 +1,51 @@
 import React from 'react'
-import { Lightbulb } from 'lucide-react'
-import { MotionButton } from './MotionButton'
-import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { AgentType } from '../../lib/types'
 
 interface QuickAction {
-  label: string
+  text: string
+  agent: AgentType
   icon: React.ReactNode
-  href?: string
-  onClick?: () => void
-  color: string
 }
 
-interface QuickActionsDashboardProps {
+interface QuickActionsProps {
   actions: QuickAction[]
+  onActionClick: (action: QuickAction) => void
 }
 
-export const QuickActionsDashboard: React.FC<QuickActionsDashboardProps> = ({ actions }) => {
+export const QuickActions: React.FC<QuickActionsProps> = ({
+  actions,
+  onActionClick
+}) => {
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-        <Lightbulb className="w-5 h-5 mr-2 text-yellow-500" />
-        Quick Actions
-      </h3>
-      <div className="space-y-3">
-        {actions.map((action, index) => {
-          const ButtonContent = (
-            <MotionButton
-              onClick={action.onClick}
-              className={`w-full ${action.color} p-3 rounded-lg hover:opacity-90 transition-colors flex items-center space-x-2`}
-              variant="ghost"
-            >
-              {action.icon}
-              <span>{action.label}</span>
-            </MotionButton>
-          )
-
-          return action.href ? (
-            <Link key={index} href={action.href}>
-              {ButtonContent}
-            </Link>
-          ) : (
-            <div key={index}>{ButtonContent}</div>
-          )
-        })}
+    <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 border border-gray-700/50">
+      <h3 className="text-white font-semibold mb-4">Quick Actions</h3>
+      
+      <div className="space-y-2">
+        {actions.map((action, index) => (
+          <motion.button
+            key={index}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            onClick={() => onActionClick(action)}
+            className="w-full text-left p-3 bg-gray-700/50 rounded-lg text-gray-300 hover:bg-gray-600/50 hover:text-white transition-all duration-200 text-sm group"
+          >
+            <div className="flex items-start space-x-2">
+              <div className="text-gray-400 group-hover:text-white mt-0.5">
+                {action.icon}
+              </div>
+              <span className="leading-relaxed">{action.text}</span>
+            </div>
+          </motion.button>
+        ))}
+      </div>
+      
+   
+      <div className="mt-4 pt-4 border-t border-gray-700/50">
+        <p className="text-xs text-gray-400 text-center">
+          Click any action to try it with AI agents
+        </p>
       </div>
     </div>
   )

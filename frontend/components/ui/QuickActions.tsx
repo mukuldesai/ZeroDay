@@ -3,22 +3,30 @@ import { motion } from 'framer-motion'
 import { Lightbulb } from 'lucide-react'
 import { AgentType } from '../../lib/types'
 import { MotionButton } from './MotionButton'
+import type { JSX } from 'react'
 
 interface QuickAction {
   text: string
-  icon: React.ReactNode
+  icon: JSX.Element 
   agent: AgentType
+  userId?: string
 }
 
 interface QuickActionsProps {
   actions: QuickAction[]
   onActionClick: (action: QuickAction) => void
+  userId?: string
 }
 
 export const QuickActions: React.FC<QuickActionsProps> = ({
   actions,
-  onActionClick
+  onActionClick,
+  userId
 }) => {
+  const userActions = userId 
+    ? actions.filter(action => !action.userId || action.userId === userId)
+    : actions
+
   return (
     <div className="mt-6">
       <h4 className="font-medium text-gray-900 mb-3 flex items-center">
@@ -26,7 +34,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
         Quick Actions
       </h4>
       <div className="space-y-2">
-        {actions.map((action, index) => (
+        {userActions.map((action, index) => (
           <MotionButton
             key={index}
             onClick={() => onActionClick(action)}
