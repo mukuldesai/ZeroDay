@@ -7,9 +7,16 @@ import { formatTimeAgo } from '../../lib/utils/time'
 interface ActivityItemProps {
   activity: ActivityItemType
   index?: number
+  userId?: string
 }
 
-export const ActivityItem: React.FC<ActivityItemProps> = ({ activity, index = 0 }) => {
+export const ActivityItem: React.FC<ActivityItemProps> = ({ 
+  activity, 
+  index = 0,
+  userId 
+}) => {
+  const userOwnsActivity = !userId || activity.userId === userId
+
   const getActivityIcon = () => {
     switch (activity.type) {
       case 'chat': return <MessageSquare className="w-4 h-4" />
@@ -35,7 +42,9 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ activity, index = 0 
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.1 }}
       whileHover={{ x: 5 }}
-      className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
+      className={`flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer ${
+        !userOwnsActivity ? 'opacity-75' : ''
+      }`}
     >
       <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 flex-shrink-0">
         {getActivityIcon()}
@@ -44,7 +53,8 @@ export const ActivityItem: React.FC<ActivityItemProps> = ({ activity, index = 0 
         <h4 className="font-medium text-gray-900 truncate">{activity.title}</h4>
         <p className="text-sm text-gray-600 truncate">{activity.description}</p>
         <div className="flex items-center space-x-2 mt-1">
-          <span className="text-xs text-gray-500">{formatTimeAgo(activity.timestamp)}</span>
+          <span className="text-xs text-gray-500">{formatTimeAgo(new Date(activity.timestamp))}
+</span>
           {activity.agent && (
             <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
               {activity.agent}
