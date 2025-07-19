@@ -10,7 +10,9 @@ ZeroDay/
 │   ├── chat.py                   ✅
 │   ├── generate_plan.py          ✅
 │   ├── query_code.py             ✅
-│   └── suggest_task.py           ✅
+│   ├── suggest_task.py           ✅
+│   └── upload.py                 ✅
+│
 │
 ├── configs/                       ✅
 │   ├── prompts/
@@ -35,7 +37,11 @@ ZeroDay/
 ├── frontend/                     ✅
 │   ├── components/               ✅
 │   │   ├── chat/
-│   │   ├── dashboard/
+│   │   └── dashboard/
+│   │       ├── DashboardAnalytics.tsx        ✅
+│   │       ├── DashboardLearning.tsx          ✅
+│   │       ├── DashboardOverview.tsx    ✅
+│   │       └── DashboardTasks.tsx       ✅
 │   │   ├── landing/
 │   │   ├── layout/
 │   │   │   └── NavigationHeader.tsx     ✅
@@ -49,6 +55,7 @@ ZeroDay/
 │   │       ├── ChatMessage.tsx         ✅
 │   │       ├── CreateTaskModal.tsx     ✅
 │   │       ├── CTASection.tsx          ✅
+│   │       ├── DataUploadInterface.tsx ✅
 │   │       ├── EmptyState.tsx          ✅
 │   │       ├── FeatureCard.tsx         ✅
 │   │       ├── FloatingElements.tsx    ✅
@@ -80,9 +87,10 @@ ZeroDay/
 │   ├── lib/                     ✅
 │   │   ├── animations/
 │   │   │   └── variants.ts            ✅
+│   │   ├── animations/──                ✅
+│   │   │    └──client.ts                 ✅
 │   │   ├── data/
 │   │   │   ├── chatData.tsx           ✅
-│   │   │   ├── dashboardData.tsx      ✅
 │   │   │   ├── landingData.tsx        ✅
 │   │   │   └── taskData.tsx           ✅
 │   │   ├── hooks/
@@ -139,4 +147,5 @@ ZeroDay/
 
 videos link(actual video)        ⬜ 
 testing jira,slack               ⬜ 
+gti,slack,jira key
 

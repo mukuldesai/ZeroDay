@@ -10,7 +10,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+/lib/
+!/frontend/lib/
 lib64/
 parts/
 sdist/
@@ -97,16 +98,17 @@ logs/
 frontend/.next/
 frontend/node_modules/
 frontend/.env.local
-# Remove this to allow tracking lib files:
-# frontend/lib/
 
-# If you only want to allow certain subfolders in lib/, use this instead:
+# ✅ ALLOW tracking frontend/lib/*
+# If you want to selectively ignore subfolders, use:
 # frontend/lib/*
-# !frontend/lib/hooks/
-# !frontend/lib/data/
-# !frontend/lib/types/
+# !frontend/lib/context/
+# !frontend/lib/api/
+# !frontend/lib/animations/
 # !frontend/lib/utils/
+# !frontend/lib/types/
+# But for now we’ll allow full tracking:
+# REMOVED: frontend/lib/
 
-# Optional: you may choose to ignore lockfile if your team doesn't use it
+# Optional: lockfile (ignore if your team doesn't commit it)
 # frontend/package-lock.json
-    
