@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 
 interface SystemStatus {
   backendConnected: boolean
@@ -46,13 +47,13 @@ export const useSystemStatus = () => {
   const checkSystemStatus = async () => {
     setIsChecking(true)
     try {
-      const agentsResponse = await fetch('http://localhost:8000/agents')
+      const agentsResponse = await fetch(`${API_BASE}/agents`)
       const agents = agentsResponse.ok ? await agentsResponse.json() : {}
       
-      const codeStatsResponse = await fetch('http://localhost:8000/api/query/code/code_stats?demo=true')
+      const codeStatsResponse = await fetch(`${API_BASE}/api/query/code/code_stats?demo=true`)
       const codeStats = codeStatsResponse.ok ? await codeStatsResponse.json() : {}
       
-      const uploadResponse = await fetch('http://localhost:8000/api/upload/status')
+      const uploadResponse = await fetch(`${API_BASE}/api/upload/status`)
       const uploadData = uploadResponse.ok ? await uploadResponse.json() : {}
 
       const backendConnected = agentsResponse.ok || codeStatsResponse.ok || uploadResponse.ok

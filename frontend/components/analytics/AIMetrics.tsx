@@ -27,10 +27,11 @@ export default function AIMetrics() {
 
   const fetchMetrics = async () => {
     try {
+      const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
       const [learningStats, mentorStats, agentsStatus] = await Promise.all([
-        fetch('http://localhost:8000/api/learning_stats').then(r => r.json()).catch(() => ({})),
-        fetch('http://localhost:8000/api/mentor_stats').then(r => r.json()).catch(() => ({})),
-        fetch('http://localhost:8000/agents').then(r => r.json()).catch(() => ({}))
+              fetch(`${API_BASE}/api/learning_stats`).then(r => r.json()).catch(() => ({})),
+              fetch(`${API_BASE}/api/mentor_stats`).then(r => r.json()).catch(() => ({})),
+              fetch(`${API_BASE}/agents`).then(r => r.json()).catch(() => ({}))
       ])
 
       const activeAgents = Object.values(agentsStatus).filter((agent: any) => agent?.available).length

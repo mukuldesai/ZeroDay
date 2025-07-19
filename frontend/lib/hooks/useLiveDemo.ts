@@ -20,7 +20,8 @@ export const useLiveDemo = () => {
       const randomQuestion = demoQuestions[Math.floor(Math.random() * demoQuestions.length)]
       
       try {
-        const response = await fetch('http://localhost:8000/api/ask_mentor', {
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+        const response = await fetch(`${API_BASE}/api/ask_mentor`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
