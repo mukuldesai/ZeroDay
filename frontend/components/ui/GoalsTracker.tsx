@@ -9,17 +9,25 @@ interface Goal {
 interface GoalsTrackerProps {
   goals: Goal[]
   title?: string
+  userName?: string
 }
 
 export const GoalsTracker: React.FC<GoalsTrackerProps> = ({ 
   goals, 
-  title = "Today's Goals" 
+  title, 
+  userName 
 }) => {
+  const getHeading = () => {
+    if (title) return title
+    if (userName) return `${userName}'s Goals`
+    return 'Learning Goals'
+  }
+
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
       <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
         <Target className="w-5 h-5 mr-2 text-red-500" />
-        {title}
+        {getHeading()}
       </h3>
       <div className="space-y-3">
         {goals.map((goal, index) => (
