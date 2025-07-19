@@ -19,27 +19,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onPlayVideo }) => {
           animate="animate"
           className="text-center"
         >
-          {/* Badge */}
           <motion.div
             variants={fadeInUp}
             className="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-200 rounded-full px-4 py-2 mb-8"
           >
             <Sparkles className="w-4 h-4 text-indigo-600" />
-            <span className="text-indigo-700 text-sm font-medium">AI-Powered Developer Onboarding</span>
+            <span className="text-indigo-700 text-sm font-medium">Portfolio Project: AI Engineering</span>
           </motion.div>
 
-          {/* Main Headline */}
           <motion.h1
             variants={fadeInUp}
             className="text-4xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-6"
           >
-            From{' '}
+            Transform Developer{' '}
             <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              2 Weeks
-            </span>
-            {' '}to{' '}
-            <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-              2 Days
+              Onboarding
             </span>
           </motion.h1>
 
@@ -47,21 +41,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onPlayVideo }) => {
             variants={fadeInUp}
             className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed"
           >
-            Revolutionary AI agents that understand your codebase, create personalized learning paths, 
-            and accelerate developer onboarding like never before.
+            A sophisticated multi-agent AI system that analyzes codebases, creates personalized learning paths, 
+            and accelerates developer onboarding through intelligent automation.
           </motion.p>
 
-          {/* CTA Buttons */}
           <motion.div
             variants={fadeInUp}
             className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-16"
           >
-            <Link href="/chat">
+            <Link href="/demo">
               <MotionButton
                 className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:shadow-lg transition-all duration-300 flex items-center space-x-2"
               >
                 <Rocket className="w-5 h-5" />
-                <span>Start Onboarding</span>
+                <span>Try Demo</span>
                 <ArrowRight className="w-5 h-5" />
               </MotionButton>
             </Link>
@@ -73,6 +66,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onPlayVideo }) => {
               <Play className="w-5 h-5" />
               <span>Watch Demo</span>
             </MotionButton>
+            <Link href="/architecture">
+              <MotionButton
+                variant="secondary"
+                className="bg-white text-gray-900 px-8 py-4 rounded-2xl text-lg font-semibold border border-gray-200 hover:shadow-lg transition-all duration-300"
+              >
+                View Architecture
+              </MotionButton>
+            </Link>
           </motion.div>
         </motion.div>
       </div>

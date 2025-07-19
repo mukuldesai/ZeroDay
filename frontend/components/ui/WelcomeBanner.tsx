@@ -6,21 +6,33 @@ interface WelcomeBannerProps {
   completionRate: number
   learningStreak: number
   averageResponseTime: string
+  isDemo?: boolean
 }
 
 export const WelcomeBanner: React.FC<WelcomeBannerProps> = ({
-  userName = "Alex",
+  userName = "Developer", 
   completionRate,
   learningStreak,
-  averageResponseTime
+  averageResponseTime,
+  isDemo = false
 }) => {
   return (
-    <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white">
+    <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white relative">
+      
+      {isDemo && (
+        <div className="absolute top-4 right-4 bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-medium">
+          Demo Mode
+        </div>
+      )}
+      
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold mb-2">Welcome back, {userName}! 👋</h2>
           <p className="text-indigo-100 mb-4">
-            You're making great progress. You've completed {completionRate}% of your onboarding goals this week!
+            {isDemo 
+              ? `This is a demo showing how ZeroDay tracks progress. In a real scenario, you'd see ${completionRate}% completion of your onboarding goals.`
+              : `You're making great progress. You've completed ${completionRate}% of your onboarding goals this week!`
+            }
           </p>
           <div className="flex items-center space-x-6">
             <div className="flex items-center space-x-2">
