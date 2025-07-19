@@ -5,9 +5,10 @@ interface ProgressBarProps {
   progress: number
   showLabel?: boolean
   size?: 'sm' | 'md' | 'lg'
-  color?: 'blue' | 'green' | 'orange' | 'purple' | 'indigo'
+  color?: 'blue' | 'green' | 'orange' | 'purple' | 'indigo' | 'demo'
   className?: string
   animated?: boolean
+  userId?: string
 }
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({
@@ -16,7 +17,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   size = 'md',
   color = 'indigo',
   className = '',
-  animated = true
+  animated = true,
+  userId
 }) => {
   const sizeClasses = {
     sm: 'h-1',
@@ -29,7 +31,8 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
     green: 'from-green-500 to-green-600', 
     orange: 'from-orange-500 to-orange-600',
     purple: 'from-purple-500 to-purple-600',
-    indigo: 'from-indigo-500 to-purple-500'
+    indigo: 'from-indigo-500 to-purple-500',
+    demo: 'from-demo-500 to-demo-600'
   }
 
   const ProgressComponent = animated ? motion.div : 'div'
@@ -37,7 +40,6 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
     initial: { width: 0 },
     animate: { width: `${progress}%` },
     transition: { duration: 1, ease: easeOut }
-
   } : {
     style: { width: `${progress}%` }
   }
