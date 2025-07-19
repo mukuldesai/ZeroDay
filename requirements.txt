@@ -1,3 +1,5 @@
+# requirements.txt - ZeroDay AI Platform (Your Exact Dependencies)
+
 # FastAPI backend
 fastapi
 uvicorn[standard]
@@ -38,3 +40,7 @@ pyjwt>=2.8.0
 bcrypt>=4.0.1
 python-jose>=3.3.0
 passlib>=1.7.0
+
+# Additional dependencies for Render deployment
+psycopg2-binary
+redis
