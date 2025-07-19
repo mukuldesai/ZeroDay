@@ -1,7 +1,7 @@
 #!/bin/bash
+# .render/start.sh - ZeroDay AI Platform Start Script
 
-
-set -e 
+set -e  # Exit on any error
 echo "🚀 Starting ZeroDay AI Platform..."
 
 

@@ -1,7 +1,7 @@
 #!/bin/bash
+# .render/build.sh - ZeroDay AI Platform Build Script
 
-
-set -e      
+set -e  # Exit on any error
 
 echo "🚀 Starting ZeroDay AI Platform Build Process..."
 
