@@ -6,11 +6,13 @@ type ViewMode = 'grid' | 'list' | 'kanban'
 interface ViewModeToggleProps {
   viewMode: ViewMode
   onViewModeChange: (mode: ViewMode) => void
+  isDemo?: boolean
 }
 
 export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({
   viewMode,
-  onViewModeChange
+  onViewModeChange,
+  isDemo = false
 }) => {
   const modes = [
     { 
@@ -50,15 +52,21 @@ export const ViewModeToggle: React.FC<ViewModeToggleProps> = ({
   ]
 
   return (
-    <div className="flex items-center bg-gray-100 rounded-lg p-1">
+    <div className={`flex items-center rounded-lg p-1 ${
+      isDemo ? 'bg-demo-100' : 'bg-gray-100'
+    }`}>
       {modes.map(({ mode, icon, label }) => (
         <MotionButton
           key={mode}
           onClick={() => onViewModeChange(mode)}
           className={`p-2 rounded text-sm font-medium transition-colors ${
             viewMode === mode
-              ? 'bg-white text-gray-900 shadow-sm'
-              : 'text-gray-600 hover:text-gray-900'
+              ? isDemo
+                ? 'bg-white text-demo-900 shadow-sm'
+                : 'bg-white text-gray-900 shadow-sm'
+              : isDemo
+                ? 'text-demo-600 hover:text-demo-900'
+                : 'text-gray-600 hover:text-gray-900'
           }`}
           variant="ghost"
           title={label}

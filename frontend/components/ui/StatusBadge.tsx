@@ -1,6 +1,6 @@
 import React from 'react'
 
-export type StatusType = 'todo' | 'in-progress' | 'review' | 'completed' | 'pending'
+export type StatusType = 'todo' | 'in-progress' | 'review' | 'completed' | 'pending' | 'blocked'| 'suggested'
 export type PriorityType = 'low' | 'medium' | 'high' | 'urgent'
 export type DifficultyType = 'easy' | 'medium' | 'hard'
 
@@ -26,9 +26,17 @@ export const statusConfigs: Record<StatusType, StatusConfig> = {
     label: 'Completed',
     className: 'bg-green-100 text-green-700 border-green-300'
   },
+   'blocked': {
+    label: 'Blocked',
+    className: 'bg-red-100 text-red-700 border-red-300'
+  },
   'pending': {
     label: 'Pending',
     className: 'bg-gray-100 text-gray-700 border-gray-300'
+  },
+  'suggested': {
+    label: 'Suggested',
+    className: 'bg-orange-100 text-orange-700 border-orange-300'
   }
 }
 
@@ -71,20 +79,16 @@ interface StatusBadgeProps {
   value: StatusType | PriorityType | DifficultyType
   size?: 'sm' | 'md'
   className?: string
+  isDemo?: boolean
 }
 
 export const StatusBadge: React.FC<StatusBadgeProps> = ({
   type,
   value,
   size = 'md',
-  className = ''
+  className = '',
+  isDemo = false
 }) => {
-  const configs = {
-    status: statusConfigs,
-    priority: priorityConfigs, 
-    difficulty: difficultyConfigs
-  }
-
   const config =
   type === 'status'
     ? statusConfigs[value as StatusType]
@@ -102,10 +106,12 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
     ? 'rounded-full font-medium border-2' 
     : 'rounded font-medium'
 
+  const demoClasses = isDemo ? 'ring-1 ring-demo-300' : ''
+
   return (
     <span className={`
       inline-flex items-center ${baseClasses} ${sizeClasses[size]} 
-      ${config.className} ${className}
+      ${config.className} ${demoClasses} ${className}
     `}>
       {config.label}
     </span>

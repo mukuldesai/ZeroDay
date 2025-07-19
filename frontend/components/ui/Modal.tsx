@@ -12,6 +12,7 @@ interface ModalProps {
   size?: 'sm' | 'md' | 'lg' | 'xl'
   showCloseButton?: boolean
   className?: string
+  isDemo?: boolean
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -21,7 +22,8 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   size = 'md',
   showCloseButton = true,
-  className = ''
+  className = '',
+  isDemo = false
 }) => {
   const sizeClasses = {
     sm: 'max-w-md',
@@ -48,21 +50,31 @@ export const Modal: React.FC<ModalProps> = ({
             exit="exit"
             className={`
               bg-white rounded-2xl w-full ${sizeClasses[size]} max-h-[90vh] 
-              overflow-y-auto shadow-2xl ${className}
+              overflow-y-auto shadow-2xl ${className} ${
+                isDemo ? 'ring-4 ring-demo-200' : ''
+              }
             `}
             onClick={(e) => e.stopPropagation()}
           >
-            {(title || showCloseButton) && (
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                {title && (
-                  <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
-                )}
+            {(title || showCloseButton || isDemo) && (
+              <div className={`flex items-center justify-between p-6 border-b border-gray-200 ${
+                isDemo ? 'bg-demo-50' : ''
+              }`}>
+                <div className="flex items-center space-x-3">
+                  {title && (
+                    <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+                  )}
+                  {isDemo && (
+                    <span className="bg-demo-100 text-demo-700 px-2 py-1 rounded-full text-xs font-medium">
+                      Demo Mode
+                    </span>
+                  )}
+                </div>
                 {showCloseButton && (
                   <MotionButton
                     variant="ghost"
                     size="sm"
                     onClick={onClose}
-                    className="ml-auto"
                   >
                     <X className="w-5 h-5" />
                   </MotionButton>
