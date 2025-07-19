@@ -301,10 +301,11 @@ export default function IndexPage() {
     const checkSystemStatus = async () => {
       try {
         
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
         const [healthResponse, agentsResponse, uploadResponse] = await Promise.all([
-          fetch('http://127.0.0.1:8000/health/'),
-          fetch('http://127.0.0.1:8000/agents'),
-          fetch('http://127.0.0.1:8000/api/upload/status')
+            fetch(`${API_BASE}/health/`),
+            fetch(`${API_BASE}/agents`),
+            fetch(`${API_BASE}/api/upload/status`)
         ]);
         
         console.log('Health response:', healthResponse.status);
@@ -677,7 +678,7 @@ export default function IndexPage() {
                   Start the backend to see full functionality:
                 </p>
                 <code className="text-red-200 text-xs bg-red-900/30 p-2 rounded block font-mono">
-                  uvicorn api.main:app --reload --port 8000
+                  Reload the agents
                 </code>
               </div>
             )}

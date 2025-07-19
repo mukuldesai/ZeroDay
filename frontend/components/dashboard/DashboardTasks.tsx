@@ -14,7 +14,8 @@ interface DashboardTasksProps {
 }
 
 
-const fetcher = (url: string) => fetch(`http://localhost:8000${url}`).then(res => res.json())
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const fetcher = (url: string) => fetch(`${API_BASE}${url}`).then(res => res.json())
 const postFetcher = ([url, body]: [string, any]) => fetch(`http://localhost:8000${url}`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
