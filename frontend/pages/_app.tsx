@@ -1,7 +1,8 @@
-// pages/_app.tsx
 import '../styles/global.css'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import { DemoProvider } from '../lib/context/DemoContext'
+import { AuthProvider } from '../lib/auth/authContext'
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -13,7 +14,11 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <meta name="theme-color" content="#3b82f6" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Component {...pageProps} />
+      <AuthProvider>
+        <DemoProvider>
+          <Component {...pageProps} />
+        </DemoProvider>
+      </AuthProvider>
     </>
   )
 }
