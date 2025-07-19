@@ -1,14 +1,18 @@
 import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Play } from 'lucide-react'
-import { Modal } from './Modal'
 
 interface VideoModalProps {
   isOpen: boolean
   onClose: () => void
+  isDemo?: boolean
 }
 
-export const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose }) => {
+export const VideoModal: React.FC<VideoModalProps> = ({ 
+  isOpen, 
+  onClose,
+  isDemo = false 
+}) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -23,20 +27,42 @@ export const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose }) => {
             initial={{ scale: 0.5 }}
             animate={{ scale: 1 }}
             exit={{ scale: 0.5 }}
-            className="bg-white rounded-2xl p-8 max-w-4xl w-full"
+            className={`bg-white rounded-2xl p-8 max-w-4xl w-full ${
+              isDemo ? 'ring-4 ring-demo-300' : ''
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="text-center">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">ZeroDay Demo Video</h3>
-              <div className="bg-gray-100 rounded-xl h-64 flex items-center justify-center mb-6">
-                <div className="text-gray-500">
+              <div className="flex items-center justify-center space-x-3 mb-4">
+                <h3 className="text-2xl font-bold text-gray-900">
+                  {isDemo ? 'ZeroDay Demo Walkthrough' : 'ZeroDay Demo Video'}
+                </h3>
+                {isDemo && (
+                  <span className="bg-demo-100 text-demo-700 px-2 py-1 rounded-full text-xs font-medium">
+                    Demo Mode
+                  </span>
+                )}
+              </div>
+              <div className={`rounded-xl h-64 flex items-center justify-center mb-6 ${
+                isDemo ? 'bg-demo-100' : 'bg-gray-100'
+              }`}>
+                <div className={`${isDemo ? 'text-demo-500' : 'text-gray-500'}`}>
                   <Play className="w-16 h-16 mx-auto mb-4" />
-                  <p>Demo video will be embedded here</p>
+                  <p>
+                    {isDemo 
+                      ? 'Interactive demo walkthrough will be shown here'
+                      : 'Demo video will be embedded here'
+                    }
+                  </p>
                 </div>
               </div>
               <button
                 onClick={onClose}
-                className="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                className={`px-6 py-2 rounded-lg transition-colors ${
+                  isDemo 
+                    ? 'bg-demo-600 text-white hover:bg-demo-700'
+                    : 'bg-gray-600 text-white hover:bg-gray-700'
+                }`}
               >
                 Close
               </button>

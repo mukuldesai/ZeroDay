@@ -8,6 +8,8 @@ interface SearchInputProps {
   placeholder?: string
   className?: string
   showClearButton?: boolean
+  userId?: string
+  isDemo?: boolean
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
@@ -15,17 +17,23 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   onChange,
   placeholder = "Search...",
   className = '',
-  showClearButton = true
+  showClearButton = true,
+  userId,
+  isDemo = false
 }) => {
+  const focusRing = isDemo ? 'focus:ring-demo-500' : 'focus:ring-indigo-500'
+  
   return (
     <div className={`relative ${className}`}>
       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
       <input
         type="text"
-        placeholder={placeholder}
+        placeholder={isDemo ? `${placeholder} (demo mode)` : placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+        className={`w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg ${focusRing} focus:border-transparent ${
+          isDemo ? 'ring-2 ring-demo-200' : ''
+        }`}
       />
       {showClearButton && value && (
         <motion.button
