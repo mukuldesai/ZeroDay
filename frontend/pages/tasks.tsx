@@ -1,4 +1,6 @@
 import React, { useState, useEffect, ReactNode } from 'react';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '${API_BASE}'
 import { 
   CheckSquare, Plus, Lightbulb, MessageSquare, GitBranch, TrendingUp, Download,
   Bell, User, Menu, Settings, Brain, Search, Grid, List, Calendar,
@@ -826,7 +828,7 @@ const useTasks = () => {
   const fetchTasks = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://127.0.0.1:8000/demo/tasks/startup');
+      const response = await fetch('${API_BASE}/demo/tasks/startup');
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       
       const data = await response.json();
@@ -908,7 +910,7 @@ const useTasks = () => {
         task.id === taskId ? { ...task, status: newStatus } : task
       ));
 
-      const response = await fetch(`http://127.0.0.1:8000/api/suggest_task`, {
+      const response = await fetch(`${API_BASE}/api/suggest_task`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -930,7 +932,7 @@ const useTasks = () => {
 
   const handleCreateTask = async (taskData: TaskFormData) => {
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/suggest_task', {
+      const response = await fetch('${API_BASE}/api/suggest_task', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

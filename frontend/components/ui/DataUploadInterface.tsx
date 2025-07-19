@@ -121,7 +121,7 @@ export default function DataUploadInterface() {
       formData.append('demo_mode', isDemo.toString())
       formData.append('user_id', 'current_user')
 
-      const response = await fetch('http://localhost:8000/api/upload/files', {
+      const response = await fetch('${API_BASE}/api/upload/files', {
         method: 'POST',
         body: formData
       })
@@ -148,7 +148,7 @@ export default function DataUploadInterface() {
     setUploadStatus(prev => ({ ...prev, processing: { type: 'uploading', message: 'Building AI knowledge base...' } }))
     
     try {
-      const response = await fetch('http://localhost:8000/api/upload/process', {
+      const response = await fetch('${API_BASE}/api/upload/process', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, ReactNode } from 'react';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '${API_BASE}'
 import { 
   Shield, Lock, Key, FileCheck, Bell, User, Menu, Settings, Brain, AlertTriangle, CheckCircle, Eye, Database, Zap,
   Palette, LogOut, UserCircle, Users, MessageSquare
@@ -300,8 +302,8 @@ const SecurityStatus = () => {
       try {
         
         const [healthRes, agentsRes] = await Promise.all([
-          fetch('http://127.0.0.1:8000/health'),
-          fetch('http://127.0.0.1:8000/agents')
+          fetch('${API_BASE}/health'),
+          fetch('${API_BASE}/agents')
         ]);
 
         let securityScore = 0;
@@ -478,7 +480,7 @@ const SecurityPage = () => {
   useEffect(() => {
     const fetchSecurityMetrics = async () => {
       try {
-        const healthRes = await fetch('http://127.0.0.1:8000/health');
+        const healthRes = await fetch('${API_BASE}/health');
 
         let metrics = { ...securityMetrics };
 

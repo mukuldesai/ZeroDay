@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '${API_BASE}'
 import { 
   Play, CheckCircle, Bell, User, Menu, Settings, Brain,
   Palette, Shield, LogOut, UserCircle, Users, AlertCircle, MessageSquare
@@ -347,7 +349,7 @@ export default function DemoPage() {
     const loadDemoScenarios = async () => {
       try {
         console.log('🔄 Loading demo scenarios from API...');
-        const response = await fetch('http://127.0.0.1:8000/demo/scenarios');
+        const response = await fetch('${API_BASE}/demo/scenarios');
         
         if (response.ok) {
           const data = await response.json();
@@ -401,9 +403,9 @@ export default function DemoPage() {
         
         // Load demo analytics, tasks, and chat messages
         const [analyticsRes, tasksRes, chatRes] = await Promise.all([
-          fetch(`http://127.0.0.1:8000/demo/analytics/${selectedScenario}`),
-          fetch(`http://127.0.0.1:8000/demo/tasks/${selectedScenario}`),
-          fetch(`http://127.0.0.1:8000/demo/chat/messages/${selectedScenario}`)
+          fetch(`${API_BASE}/demo/analytics/${selectedScenario}`),
+          fetch(`${API_BASE}/demo/tasks/${selectedScenario}`),
+          fetch(`${API_BASE}/demo/chat/messages/${selectedScenario}`)
         ]);
 
         const demoInfo: any = {};
@@ -443,7 +445,7 @@ export default function DemoPage() {
     
     try {
       
-      const healthCheck = await fetch('http://127.0.0.1:8000/health');
+      const healthCheck = await fetch('${API_BASE}/health');
       
       if (healthCheck.ok) {
         console.log('✅ Backend is ready, starting demo with scenario:', selectedScenario);

@@ -16,9 +16,9 @@ interface DashboardOverviewProps {
   isDemo: boolean
 }
 
-
-const fetcher = (url: string) => fetch(`http://localhost:8000${url}`).then(res => res.json())
-const postFetcher = ([url, body]: [string, any]) => fetch(`http://localhost:8000${url}`, {
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+const fetcher = (url: string) => fetch(`${API_BASE}${url}`).then(res => res.json())
+const postFetcher = ([url, body]: [string, any]) => fetch(`${API_BASE}${url}`, {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(body)

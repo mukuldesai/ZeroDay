@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '${API_BASE}'
 import { 
   Bell, User, Menu, Settings, Brain, Eye, EyeOff, Lock, Mail,
   Palette, Shield, LogOut, UserCircle, Users, CheckCircle, AlertCircle, MessageSquare
@@ -304,7 +306,7 @@ const useAuth = () => {
       }
         
       
-      const response = await fetch('http://127.0.0.1:8000/api/auth/login', {
+      const response = await fetch('${API_BASE}/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '${API_BASE}'
 import { 
   TrendingUp, Users, MessageSquare, Target, Download, RefreshCw, Bell, User, Menu, Brain, Settings,
   Palette, Shield, LogOut, UserCircle, ChevronDown, CheckCircle, Clock, AlertCircle
@@ -303,9 +305,9 @@ const AIMetrics = ({ timeRange }: AIMetricsProps) => {
     const fetchMetrics = async () => {
       try {
         const [healthResponse, agentsResponse, uploadResponse] = await Promise.all([
-          fetch('http://127.0.0.1:8000/health'),
-          fetch('http://127.0.0.1:8000/agents'),
-          fetch('http://127.0.0.1:8000/api/upload/status')
+          fetch('${API_BASE}/health'),
+          fetch('${API_BASE}/agents'),
+          fetch('${API_BASE}/api/upload/status')
         ]);
 
         if (healthResponse.ok) {
@@ -421,9 +423,9 @@ export default function AnalyticsPage() {
     const fetchSystemMetrics = async () => {
       try {
         const [healthResponse, uploadResponse, agentsResponse] = await Promise.all([
-          fetch('http://127.0.0.1:8000/health'),
-          fetch('http://127.0.0.1:8000/api/upload/status'),
-          fetch('http://127.0.0.1:8000/agents')
+          fetch('${API_BASE}/health'),
+          fetch('${API_BASE}/api/upload/status'),
+          fetch('${API_BASE}/agents')
         ]);
 
         if (healthResponse.ok) {
@@ -465,9 +467,9 @@ export default function AnalyticsPage() {
     setIsRefreshing(true);
     try {
       await Promise.all([
-        fetch('http://127.0.0.1:8000/health'),
-        fetch('http://127.0.0.1:8000/agents'),
-        fetch('http://127.0.0.1:8000/api/upload/status')
+        fetch('${API_BASE}/health'),
+        fetch('${API_BASE}/agents'),
+        fetch('${API_BASE}/api/upload/status')
       ]);
     } catch (error) {
       console.error('Failed to refresh data:', error);

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '${API_BASE}'
 import { 
   Database, Zap, Brain, CheckCircle, AlertCircle, Upload, TrendingUp,
   Bell, User, Menu, Settings, FileText, Code, GitBranch, Folder,
@@ -7,6 +9,8 @@ import {
   File, CheckSquare, XCircle, ExternalLink, Sparkles
 } from 'lucide-react';
 import { useDocuments } from '../lib/hooks/useDocuments'; 
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '${API_BASE}'
 
 const getRelativeTime = (timestamp: Date) => {
   const now = new Date();
@@ -507,7 +511,7 @@ const DataUploadInterface = ({ onUploadComplete }: DataUploadInterfaceProps) => 
         });
       }, 500);
 
-      const response = await fetch('http://127.0.0.1:8000/api/upload/files', {
+      const response = await fetch('${API_BASE}/api/upload/files', {
         method: 'POST',
         body: formData
       });
@@ -905,7 +909,7 @@ export default function UploadPage() {
 
   const fetcher = async (url: string) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000${url}`);
+      const response = await fetch(`${API_BASE}${url}`);
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       return await response.json();
     } catch (error) {

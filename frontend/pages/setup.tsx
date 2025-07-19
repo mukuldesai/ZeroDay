@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '${API_BASE}'
 import { 
   Bell, User, Menu, Settings, Brain, ChevronRight, CheckCircle, Star, Target, Code, Users,
   Palette, Shield, LogOut, UserCircle, AlertCircle, MessageSquare
@@ -387,7 +389,7 @@ export default function SetupPage() {
     const fetchDemoUsers = async () => {
       try {
         
-        const response = await fetch('http://127.0.0.1:8000/demo/scenarios');
+        const response = await fetch('${API_BASE}/demo/scenarios');
         
         if (response.ok) {
           const scenarios = await response.json();
@@ -482,7 +484,7 @@ export default function SetupPage() {
 
         console.log('Saving setup data:', setupPayload);
 
-        const response = await fetch('http://127.0.0.1:8000/api/users/setup', {
+        const response = await fetch('${API_BASE}/api/users/setup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(setupPayload)
