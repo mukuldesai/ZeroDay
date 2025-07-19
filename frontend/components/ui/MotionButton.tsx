@@ -2,7 +2,7 @@ import React from 'react'
 import { motion, HTMLMotionProps } from 'framer-motion'
 
 type MotionButtonProps = HTMLMotionProps<'button'> & {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'demo' | 'auth'
   size?: 'sm' | 'md' | 'lg'
 }
 
@@ -22,7 +22,9 @@ export const MotionButton = ({
     primary: 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:shadow-lg',
     secondary: 'bg-white text-gray-900 border border-gray-200 hover:shadow-lg',
     ghost: 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
-    danger: 'bg-red-600 text-white hover:bg-red-700'
+    danger: 'bg-red-600 text-white hover:bg-red-700',
+    demo: 'bg-gradient-to-r from-demo-600 to-demo-700 text-white hover:shadow-lg',
+    auth: 'bg-gradient-to-r from-auth-600 to-auth-700 text-white hover:shadow-lg'
   }
 
   const sizeClasses = {
