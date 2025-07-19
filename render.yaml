@@ -1,5 +1,4 @@
 # render.yaml - ZeroDay AI Platform Deployment Configuration
-# force refresh
 services:
   # FastAPI Backend Service
   - type: web
@@ -66,7 +65,6 @@ databases:
     
   - name: zeroday-redis
     plan: starter  # Free tier - 25MB memory
-    maxmemoryPolicy: allkeys-lru
     region: oregon
 
 # Environment Groups (shared across services)
