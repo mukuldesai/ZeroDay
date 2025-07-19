@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import { useDocuments } from '../lib/hooks/useDocuments'; 
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || '${API_BASE}'
 
 const getRelativeTime = (timestamp: Date) => {
   const now = new Date();
