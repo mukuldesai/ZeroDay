@@ -2,13 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
 
-/* CSS Variables for consistent theming */
 :root {
-  /* Primary Colors */
   --color-primary-50: #eff6ff;
   --color-primary-100: #dbeafe;
   --color-primary-200: #bfdbfe;
@@ -20,7 +17,6 @@
   --color-primary-800: #1e40af;
   --color-primary-900: #1e3a8a;
 
-  /* Secondary Colors */
   --color-secondary-50: #fdf4ff;
   --color-secondary-100: #fae8ff;
   --color-secondary-200: #f5d0fe;
@@ -32,13 +28,11 @@
   --color-secondary-800: #86198f;
   --color-secondary-900: #701a75;
 
-  /* Accent Colors */
   --color-accent-orange: #f97316;
   --color-accent-green: #10b981;
   --color-accent-red: #ef4444;
   --color-accent-yellow: #f59e0b;
 
-  /* Neutral Colors */
   --color-gray-50: #f9fafb;
   --color-gray-100: #f3f4f6;
   --color-gray-200: #e5e7eb;
@@ -50,7 +44,16 @@
   --color-gray-800: #1f2937;
   --color-gray-900: #111827;
 
-  /* Spacing */
+  --color-demo-primary: #0ea5e9;
+  --color-demo-secondary: #0369a1;
+  --color-demo-bg: #f0f9ff;
+  --color-demo-border: #bae6fd;
+
+  --color-auth-primary: #475569;
+  --color-auth-secondary: #64748b;
+  --color-auth-bg: #f8fafc;
+  --color-auth-border: #e2e8f0;
+
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
@@ -58,31 +61,26 @@
   --spacing-xl: 2rem;
   --spacing-2xl: 3rem;
 
-  /* Border Radius */
   --radius-sm: 0.375rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
 
-  /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 
-  /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.8);
   --glass-border: rgba(255, 255, 255, 0.2);
   --glass-blur: blur(20px);
 
-  /* Animation Durations */
   --duration-fast: 150ms;
   --duration-normal: 300ms;
   --duration-slow: 500ms;
 
-  /* Z-Index Scale */
   --z-dropdown: 1000;
   --z-sticky: 1020;
   --z-fixed: 1030;
@@ -91,7 +89,6 @@
   --z-tooltip: 1060;
 }
 
-/* Base Styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -114,7 +111,6 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Typography Improvements */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.25;
@@ -141,7 +137,6 @@ code, pre {
   font-feature-settings: 'liga' 1, 'calt' 1;
 }
 
-/* Selection Styles */
 ::selection {
   background-color: var(--color-primary-200);
   color: var(--color-primary-900);
@@ -152,7 +147,6 @@ code, pre {
   color: var(--color-primary-900);
 }
 
-/* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -173,7 +167,6 @@ code, pre {
   background: var(--color-gray-400);
 }
 
-/* Focus Styles */
 .focus-ring {
   @apply outline-none ring-2 ring-blue-500 ring-opacity-50 ring-offset-2;
 }
@@ -185,7 +178,6 @@ button:focus {
   @apply focus-ring;
 }
 
-/* Custom Animations */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -328,7 +320,15 @@ button:focus {
   }
 }
 
-/* Animation Classes */
+@keyframes demo-glow {
+  0% {
+    box-shadow: 0 0 5px var(--color-demo-primary);
+  }
+  100% {
+    box-shadow: 0 0 20px var(--color-demo-primary), 0 0 30px var(--color-demo-primary);
+  }
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out forwards;
 }
@@ -378,7 +378,10 @@ button:focus {
   animation: rotate-slow 8s linear infinite;
 }
 
-/* Glassmorphism Effects */
+.animate-demo-glow {
+  animation: demo-glow 2s ease-in-out infinite alternate;
+}
+
 .glass {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
@@ -393,7 +396,6 @@ button:focus {
   border: 1px solid rgba(75, 85, 99, 0.2);
 }
 
-/* Gradient Backgrounds */
 .gradient-primary {
   background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700));
 }
@@ -425,7 +427,14 @@ button:focus {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* Text Gradients */
+.gradient-demo {
+  background: linear-gradient(135deg, var(--color-demo-primary), var(--color-demo-secondary));
+}
+
+.gradient-auth {
+  background: linear-gradient(135deg, var(--color-auth-primary), var(--color-auth-secondary));
+}
+
 .text-gradient-primary {
   background: linear-gradient(135deg, var(--color-primary-600), var(--color-secondary-600));
   -webkit-background-clip: text;
@@ -447,7 +456,13 @@ button:focus {
   background-clip: text;
 }
 
-/* Hover Effects */
+.text-gradient-demo {
+  background: linear-gradient(135deg, var(--color-demo-primary), var(--color-demo-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .hover-lift {
   transition: all var(--duration-normal) ease;
 }
@@ -481,7 +496,6 @@ button:focus {
   transform: rotate(5deg);
 }
 
-/* Loading States */
 .skeleton {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200px 100%;
@@ -493,7 +507,6 @@ button:focus {
   animation: dots 1.5s infinite;
 }
 
-/* Interactive Elements */
 .interactive {
   transition: all var(--duration-normal) ease;
   cursor: pointer;
@@ -509,7 +522,6 @@ button:focus {
   box-shadow: var(--shadow-sm);
 }
 
-/* Status Indicators */
 .status-indicator {
   position: relative;
 }
@@ -538,7 +550,6 @@ button:focus {
   background-color: var(--color-accent-yellow);
 }
 
-/* Card Styles */
 .card {
   background: white;
   border-radius: var(--radius-xl);
@@ -561,7 +572,6 @@ button:focus {
   transform: translateY(-4px);
 }
 
-/* Button Styles */
 .btn {
   @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
 }
@@ -602,6 +612,22 @@ button:focus {
   @apply bg-gray-100;
 }
 
+.btn-demo {
+  @apply bg-demo-500 text-white focus:ring-demo-500;
+}
+
+.btn-demo:hover {
+  @apply bg-demo-600;
+}
+
+.btn-auth {
+  @apply bg-auth-600 text-white focus:ring-auth-500;
+}
+
+.btn-auth:hover {
+  @apply bg-auth-700;
+}
+
 .btn-sm {
   @apply px-3 py-1.5 text-sm;
 }
@@ -610,7 +636,6 @@ button:focus {
   @apply px-6 py-3 text-lg;
 }
 
-/* Form Styles */
 .form-input {
   @apply w-full px-3 py-2 border border-gray-300 rounded-lg bg-white transition-all duration-200;
 }
@@ -651,7 +676,36 @@ button:focus {
   @apply ring-2 ring-blue-500 ring-opacity-50;
 }
 
-/* Utility Classes */
+.demo-mode-indicator {
+  background: var(--color-demo-bg);
+  border: 1px solid var(--color-demo-border);
+  color: var(--color-demo-secondary);
+  position: relative;
+}
+
+.demo-mode-indicator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-demo-primary), var(--color-demo-secondary));
+  animation: demo-glow 2s ease-in-out infinite alternate;
+}
+
+.auth-mode-indicator {
+  background: var(--color-auth-bg);
+  border: 1px solid var(--color-auth-border);
+  color: var(--color-auth-primary);
+}
+
+.user-context-indicator {
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  color: var(--color-gray-700);
+}
+
 .backdrop-blur-custom {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -671,7 +725,12 @@ button:focus {
               linear-gradient(135deg, var(--color-primary-500), var(--color-secondary-500)) border-box;
 }
 
-/* Line Clamp Utilities */
+.border-gradient-demo {
+  border: 2px solid transparent;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(135deg, var(--color-demo-primary), var(--color-demo-secondary)) border-box;
+}
+
 .line-clamp-1 {
   line-clamp: 1;  
   overflow: hidden;
@@ -696,7 +755,6 @@ button:focus {
   -webkit-line-clamp: 3;
 }
 
-/* Custom Scrollbar for specific containers */
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
 }
@@ -715,7 +773,6 @@ button:focus {
   background: linear-gradient(135deg, var(--color-primary-600), var(--color-secondary-600));
 }
 
-/* Fancy Border Animations */
 .border-animate {
   position: relative;
   overflow: hidden;
@@ -732,7 +789,27 @@ button:focus {
   animation: border-slide 2s infinite;
 }
 
-/* Print Styles */
+.demo-badge {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+  background: var(--color-demo-bg);
+  color: var(--color-demo-text);
+  border: 1px solid var(--color-demo-border);
+}
+
+.auth-badge {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+  background: var(--color-auth-bg);
+  color: var(--color-auth-primary);
+  border: 1px solid var(--color-auth-border);
+}
+
+.user-badge {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+  background: #fefce8;
+  color: #a16207;
+  border: 1px solid #fef08a;
+}
+
 @media print {
   .no-print {
     display: none !important;
@@ -748,7 +825,6 @@ button:focus {
   }
 }
 
-/* High Contrast Mode */
 @media (prefers-contrast: high) {
   :root {
     --color-gray-100: #ffffff;
@@ -760,7 +836,6 @@ button:focus {
   }
 }
 
-/* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -771,7 +846,6 @@ button:focus {
   }
 }
 
-/* Dark Mode Support (for future implementation) */
 @media (prefers-color-scheme: dark) {
   .dark-auto {
     --color-gray-50: #111827;
