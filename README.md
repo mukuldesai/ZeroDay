@@ -153,6 +153,6 @@ MIT License - feel free to use this code for learning and portfolio purposes.
 
 ## 🔗 Links
 
-- [Live Demo](https://zeroday-demo.vercel.app)
+- [Live Demo](https://zeroday-frontend-alpha.vercel.app/)
 - [Portfolio](https://v0-portfolio-page-creation-seven.vercel.app/)
 - [LinkedIn](https://linkedin.com/in/mukuldesai)
