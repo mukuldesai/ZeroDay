@@ -1,158 +1,157 @@
-# ZeroDay - AI-Powered Developer Onboarding Platform
+# ZeroDay — Multi-Agent AI Developer Onboarding
 
-A sophisticated agentic AI system that accelerates developer onboarding through intelligent mentoring, personalized learning paths, and contextual task recommendations.
+[![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=flat&logo=langchain&logoColor=white)](https://langchain.com)
+[![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat&logo=openai&logoColor=white)](https://openai.com)
+[![ChromaDB](https://img.shields.io/badge/ChromaDB-FF6B35?style=flat&logo=databricks&logoColor=white)](https://trychroma.com)
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=nextdotjs&logoColor=white)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat)](LICENSE)
 
-## 🚀 Features
+A four-agent agentic AI system that accelerates developer onboarding through contextual code search, personalized learning paths, intelligent task recommendations, and real-time mentoring. Agents share context and coordinate responses the way a real team would.
 
-- **4 Specialized AI Agents**: Knowledge, Guide, Mentor, and Task agents working in harmony
-- **Intelligent Code Analysis**: Vector-powered search across your entire codebase
-- **Personalized Learning Paths**: Adaptive guidance based on role and experience
-- **Real-time Mentoring**: Contextual help and troubleshooting assistance
-- **Smart Task Recommendations**: Curated starter tasks matched to skill level
-- **Modern Tech Stack**: FastAPI backend with Next.js frontend
+---
 
-## 🎯 Demo Mode
+## Agent Architecture
 
-Experience ZeroDay's capabilities with synthetic data and mock integrations:
-- Interactive chat with all 4 AI agents
-- Sample learning paths and task suggestions
-- Simulated code search and analysis
-- Demo Slack integration workflows
-
-## 🛠 Tech Stack
-
-**Backend:**
-- FastAPI with async/await architecture
-- ChromaDB vector database for semantic search
-- OpenAI/Anthropic LLM integration
-- Loguru for structured logging
-
-**Frontend:**
-- Next.js 14 with TypeScript
-- Tailwind CSS for modern styling
-- Lucide React icons
-- Responsive design system
-
-**Infrastructure:**
-- SQLite for local development
-- Docker-optional deployment
-- Vercel-ready frontend
-- Environment-based configuration
-
-## 🏃‍♂️ Quick Start
-
-### Prerequisites
-```bash
-Python 3.9+
-Node.js 18+
+```
+                    ┌─────────────────────────┐
+                    │     Developer Query      │
+                    └────────────┬────────────┘
+                                 │
+                    ┌────────────▼────────────┐
+                    │    Shared Context Bus    │
+                    └──┬──────┬───────┬──────┘
+                       │      │       │      │
+           ┌───────────▼─┐ ┌──▼──┐ ┌─▼───┐ ┌▼────────┐
+           │  Knowledge  │ │Guide│ │Mentor│ │  Task   │
+           │   Agent     │ │Agent│ │Agent │ │  Agent  │
+           │             │ │     │ │      │ │         │
+           │ Codebase    │ │Learn│ │Debug │ │Starter  │
+           │ search +    │ │paths│ │help +│ │tasks by │
+           │ doc lookup  │ │     │ │review│ │skill    │
+           └─────────────┘ └─────┘ └──────┘ └─────────┘
 ```
 
-### Backend Setup
+---
+
+## Features
+
+- **Knowledge Agent** — semantic search across your codebase, documentation, and PRs using ChromaDB vector embeddings
+- **Guide Agent** — builds personalized learning roadmaps based on role and experience level, tracks progress
+- **Mentor Agent** — provides real-time debugging help, code review, and contextual troubleshooting
+- **Task Agent** — recommends appropriate starter tasks matched to the developer's current skill level
+- **Shared context** — all agents read from and write to a shared session context so responses stay coherent
+
+---
+
+## Tech Stack
+
+**Backend**
+| Tool | Role |
+|---|---|
+| FastAPI | Async REST API with WebSocket support |
+| LangChain | Agent orchestration and LLM chaining |
+| ChromaDB | Vector database for semantic codebase search |
+| OpenAI GPT | Core language model for all agents |
+| SQLite | Local session and progress storage |
+| Loguru | Structured logging |
+
+**Frontend**
+| Tool | Role |
+|---|---|
+| Next.js 14 | React framework with TypeScript |
+| Tailwind CSS | Utility-first styling |
+| Lucide React | Icon system |
+
+---
+
+## Project Structure
+
+```
+ZeroDay/
+├── api/
+│   ├── main.py               # FastAPI app entry point
+│   ├── agents/
+│   │   ├── knowledge.py      # Codebase search agent
+│   │   ├── guide.py          # Learning path agent
+│   │   ├── mentor.py         # Real-time help agent
+│   │   └── task.py           # Task recommendation agent
+│   ├── core/
+│   │   ├── context_bus.py    # Shared context management
+│   │   └── vectorstore.py    # ChromaDB integration
+│   └── routers/
+│       ├── chat.py
+│       ├── upload.py
+│       └── plans.py
+├── frontend/
+│   ├── app/
+│   ├── components/
+│   └── package.json
+├── data/
+│   └── vectorstore/          # Local ChromaDB storage
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Setup
+
+**Backend**
 ```bash
 git clone https://github.com/mukuldesai/ZeroDay
-cd zeroday
+cd ZeroDay
 python -m venv env
-source env/bin/activate  # Windows: env\Scripts\activate
+source env/bin/activate       # Windows: env\Scripts\activate
 pip install -r requirements.txt
+cp .env.example .env          # Add your API keys
 python api/main.py
 ```
 
-### Frontend Setup
+**Frontend**
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-Visit `http://localhost:3000` to see ZeroDay in action.
+Visit `http://localhost:3000`
 
-## 🎮 Usage
-
-### Chat with AI Agents
-```bash
-# Ask the Knowledge Agent
-POST /api/chat
-{
-  "message": "How does the authentication system work?",
-  "agent_type": "knowledge"
-}
-
-# Get learning guidance
-POST /api/chat
-{
-  "message": "I want to learn React",
-  "agent_type": "guide"
-}
-```
-
-### Upload Team Data
-```bash
-# Upload codebase for analysis
-POST /api/upload
-{
-  "file": "codebase.zip",
-  "data_type": "github_repo"
-}
-```
-
-## 🏗 Architecture
-
-ZeroDay uses a modular agent architecture where each AI agent specializes in different aspects of developer onboarding:
-
-- **Knowledge Agent**: Searches and analyzes your codebase, documentation, and PRs
-- **Guide Agent**: Creates personalized learning roadmaps and tracks progress
-- **Mentor Agent**: Provides real-time help, debugging assistance, and guidance
-- **Task Agent**: Recommends appropriate starter tasks based on skill level
-
-## 🔧 Configuration
-
-Key environment variables:
-```bash
-OPENAI_API_KEY=your_key_here
-ANTHROPIC_API_KEY=your_key_here
+**Environment variables**
+```env
+OPENAI_API_KEY=your_key
+ANTHROPIC_API_KEY=your_key
 VECTOR_STORE_PATH=./data/vectorstore
 UPLOAD_DIR=./uploads
 ```
 
-## 📊 API Endpoints
+---
 
-- `POST /api/chat` - Main chat interface
-- `POST /api/upload` - Data upload and processing
-- `GET /api/agents` - List available agents
-- `POST /api/ask_mentor` - Direct mentor queries
-- `POST /api/generate_plan` - Create learning plans
-- `POST /api/suggest_task` - Get task recommendations
+## API Endpoints
 
-## 🚢 Deployment
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/api/chat` | Send message to any agent |
+| POST | `/api/upload` | Upload codebase for indexing |
+| GET | `/api/agents` | List available agents |
+| POST | `/api/ask_mentor` | Direct mentor query |
+| POST | `/api/generate_plan` | Create a learning plan |
+| POST | `/api/suggest_task` | Get task recommendations |
 
-### Local Development
 ```bash
-python api/main.py &
-cd frontend && npm run dev
+# Example: query the Knowledge Agent
+curl -X POST http://localhost:8000/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "How does authentication work?", "agent_type": "knowledge"}'
 ```
 
-### Production (Vercel + Railway)
-1. Deploy frontend to Vercel
-2. Deploy backend to Railway/Render
-3. Configure environment variables
-4. Update CORS settings
+---
 
-## 🤝 Contributing
+## Author
 
-This is a portfolio project showcasing modern AI agent architecture and full-stack development skills. The codebase demonstrates:
+**Mukul Desai** — Data Engineer
 
-- Clean FastAPI async patterns
-- Modular agent design
-- Vector database integration
-- Modern React/TypeScript practices
-- Professional deployment strategies
-
-## 📝 License
-
-MIT License - feel free to use this code for learning and portfolio purposes.
-
-## 🔗 Links
-
-- [Live Demo](https://zeroday-frontend-alpha.vercel.app/)
-- [Portfolio](https://v0-portfolio-page-creation-seven.vercel.app/)
-- [LinkedIn](https://linkedin.com/in/mukuldesai)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-mukuldesai-0A66C2?style=flat&logo=linkedin&logoColor=white)](https://linkedin.com/in/mukuldesai)
+[![Portfolio](https://img.shields.io/badge/Portfolio-mukuldesai.vercel.app-000000?style=flat&logo=vercel&logoColor=white)](https://mukuldesai.vercel.app)
